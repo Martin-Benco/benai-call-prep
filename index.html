@@ -194,12 +194,8 @@
     <div class="header-divider"></div>
     <span class="header-title">Command Center</span>
   </div>
-  <div class="header-meta" style="display:flex;align-items:center;gap:24px;">
-    <ul class="header-nav">
-      <li><a href="#ulohy">Moje úlohy</a></li>
-      <li><a href="#hovory">Hovory</a></li>
-    </ul>
-    <span class="header-cta">22. aug 2026</span>
+  <div class="header-meta" style="display:flex;align-items:center;">
+    <span class="header-cta" id="dnesDatum">&nbsp;</span>
   </div>
 </header>
 
@@ -328,6 +324,14 @@
 <script>
 (function(){
   "use strict";
+
+  // ====== DNEŠNÝ DÁTUM V HLAVIČKE ======
+  (function(){
+    var M = ["jan","feb","mar","apr","máj","jún","júl","aug","sep","okt","nov","dec"];
+    var d = new Date();
+    var el = document.getElementById("dnesDatum");
+    if(el) el.textContent = d.getDate() + ". " + M[d.getMonth()] + " " + d.getFullYear();
+  })();
 
   // ====== TRVALÉ ÚLOHY ======
   // Claude sem dopisuje úlohy natrvalo. Tieto prežijú aj vymazanie prehliadača.
