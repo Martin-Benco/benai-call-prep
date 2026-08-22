@@ -174,6 +174,43 @@
   .export-btn:hover { background:var(--amber-pale); }
   .export-hint { font-size:12px; color:var(--text-muted); }
 </style>
+
+<style>
+  /* ===== VÝKON REKLÁM ===== */
+  .ads-accounts { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:38px; }
+  .adacc { background:#fff; border:3px solid var(--border); box-shadow:var(--shadow); padding:24px; position:relative; }
+  .adacc::before { content:""; position:absolute; top:0; left:0; right:0; height:6px; background:var(--accent); }
+  .adacc.top::before { background:var(--green); }
+  .adacc h4 { font-size:15px; font-weight:900; letter-spacing:-0.015em; margin-bottom:3px; line-height:1.2; }
+  .adacc .acc-id { font-family:var(--mono); font-size:10px; color:var(--text-muted); letter-spacing:0.04em; margin-bottom:16px; display:block; }
+  .adacc .spend { font-family:var(--mono); font-size:32px; font-weight:900; letter-spacing:-0.035em; color:var(--ink); line-height:1; display:block; margin-bottom:4px; }
+  .adacc .spend-lbl { font-size:10px; color:var(--text-light); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:18px; }
+  .adacc .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px 10px; border-top:2px solid var(--border-light); padding-top:14px; }
+  .adacc .kv .k { font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.07em; display:block; }
+  .adacc .kv .v { font-family:var(--mono); font-size:15px; font-weight:900; color:var(--ink); }
+  .adacc .kv .v.good { color:var(--green); }
+  .adacc .kv .v.bad { color:var(--red); }
+
+  .camp-table { margin-top:40px; border:3px solid var(--border); box-shadow:var(--shadow); background:#fff; }
+  .camp-head { display:grid; grid-template-columns:1fr 90px 90px 80px 80px 110px; gap:12px; padding:14px 20px; border-bottom:3px solid var(--border); background:var(--bg-alt); }
+  .camp-head span { font-family:var(--mono); font-size:9px; font-weight:900; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.09em; }
+  .camp-row { display:grid; grid-template-columns:1fr 90px 90px 80px 80px 110px; gap:12px; padding:14px 20px; border-bottom:2px solid var(--border-light); align-items:center; }
+  .camp-row:last-child { border-bottom:none; }
+  .camp-row .cname { font-size:13px; color:var(--ink); line-height:1.35; word-break:break-word; }
+  .camp-row .num { font-family:var(--mono); font-size:13px; font-weight:900; }
+  .camp-row .num.warn { color:var(--red); }
+  .camp-row .num.ok { color:var(--green); }
+  .cstat { font-family:var(--mono); font-size:9px; font-weight:900; padding:4px 8px; border:2px solid var(--border); text-transform:uppercase; letter-spacing:0.07em; text-align:center; }
+  .cstat.active { background:var(--green-pale); color:#14532d; }
+  .cstat.paused { background:var(--bg-alt); color:var(--text-muted); }
+  .ads-note { margin-top:22px; font-size:13px; color:var(--text-light); }
+  @media (max-width:980px){
+    .ads-accounts { grid-template-columns:1fr; }
+    .camp-head { display:none; }
+    .camp-row { grid-template-columns:1fr 1fr; gap:8px; }
+    .camp-row .cname { grid-column:1 / -1; font-weight:700; }
+  }
+</style>
 </head>
 <body>
 
@@ -200,8 +237,8 @@
     <p class="cover-subtitle">Dva hovory, sobota 22. augusta 2026, všetky časy SEČ. Oba sú úvodné rozhovory s ľuďmi zo sveta social media marketingu.</p>
     <div class="hero-stats">
       <div class="hero-stat"><span class="num">2</span><div class="label">Hovory</div></div>
-      <div class="hero-stat"><span class="num green">0</span><div class="label">Pred uzavretím</div></div>
-      <div class="hero-stat"><span class="num red">0</span><div class="label">Treba zachrániť</div></div>
+      <div class="hero-stat"><span class="num green">6</span><div class="label">Aktívne kampane</div></div>
+      <div class="hero-stat"><span class="num">€172</span><div class="label">Útrata 7 dní</div></div>
       <div class="hero-stat"><span class="num amber" id="statTasks">0</span><div class="label">Otvorené úlohy</div></div>
     </div>
   </div>
@@ -242,6 +279,113 @@
         <span class="export-hint" id="stavUlozenia">Ukladá sa automaticky</span>
       </div>
     </div>
+  </div>
+</section>
+
+
+<!-- ===== VÝKON REKLÁM ===== -->
+<section class="section" id="reklamy">
+  <div class="section-inner">
+    <div class="s-label green">Posledných 7 dní</div>
+    <h2>Výkon reklám</h2>
+    <p class="section-lead">Tri účty s aktívnou platobnou metódou. Dáta z Meta Ads k 22. augustu 2026.</p>
+
+    <div class="ads-accounts">
+      <div class="adacc top">
+        <h4>Boosterberg Main</h4>
+        <span class="acc-id">201211287630426</span>
+        <span class="spend">€100,90</span>
+        <span class="spend-lbl">Útrata za 7 dní</span>
+        <div class="grid2">
+          <div class="kv"><span class="k">Zobrazenia</span><span class="v">109 361</span></div>
+          <div class="kv"><span class="k">Kliknutia</span><span class="v">1 267</span></div>
+          <div class="kv"><span class="k">CTR</span><span class="v">1,16 %</span></div>
+          <div class="kv"><span class="k">CPC</span><span class="v good">€0,08</span></div>
+          <div class="kv"><span class="k">Zásah</span><span class="v">70 454</span></div>
+        </div>
+      </div>
+
+      <div class="adacc">
+        <h4>B2Better</h4>
+        <span class="acc-id">908719718945194</span>
+        <span class="spend">€70,56</span>
+        <span class="spend-lbl">Útrata za 7 dní</span>
+        <div class="grid2">
+          <div class="kv"><span class="k">Zobrazenia</span><span class="v">6 514</span></div>
+          <div class="kv"><span class="k">Kliknutia</span><span class="v">136</span></div>
+          <div class="kv"><span class="k">CTR</span><span class="v good">2,09 %</span></div>
+          <div class="kv"><span class="k">CPC</span><span class="v bad">€0,52</span></div>
+          <div class="kv"><span class="k">Zásah</span><span class="v">2 259</span></div>
+        </div>
+      </div>
+
+      <div class="adacc">
+        <h4>Boosterberg Presets</h4>
+        <span class="acc-id">765661260243623</span>
+        <span class="spend">€1,05</span>
+        <span class="spend-lbl">Útrata za 7 dní</span>
+        <div class="grid2">
+          <div class="kv"><span class="k">Zobrazenia</span><span class="v">580</span></div>
+          <div class="kv"><span class="k">Kliknutia</span><span class="v">20</span></div>
+          <div class="kv"><span class="k">CTR</span><span class="v good">3,45 %</span></div>
+          <div class="kv"><span class="k">CPC</span><span class="v good">€0,05</span></div>
+          <div class="kv"><span class="k">Zásah</span><span class="v">573</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="camp-table">
+      <div class="camp-head">
+        <span>Kampaň &middot; Boosterberg Main</span>
+        <span>Útrata</span>
+        <span>Zobrazenia</span>
+        <span>Kliky</span>
+        <span>CTR</span>
+        <span>Stav</span>
+      </div>
+      <div class="camp-row">
+        <div class="cname">Instagram Campaign &middot; Engagement ThruPlay</div>
+        <div class="num">€51,33</div>
+        <div class="num">28 099</div>
+        <div class="num">47</div>
+        <div class="num warn">0,17 %</div>
+        <div class="cstat active">Beží</div>
+      </div>
+      <div class="camp-row">
+        <div class="cname">Instagram Campaign &middot; Remarketing Traffic</div>
+        <div class="num">€49,57</div>
+        <div class="num">81 262</div>
+        <div class="num">1 220</div>
+        <div class="num ok">1,50 %</div>
+        <div class="cstat active">Beží</div>
+      </div>
+      <div class="camp-row">
+        <div class="cname">Campaign BETA &middot; Boosterberg (2 kampane)</div>
+        <div class="num">€0</div>
+        <div class="num">0</div>
+        <div class="num">0</div>
+        <div class="num">&mdash;</div>
+        <div class="cstat active">Beží</div>
+      </div>
+      <div class="camp-row">
+        <div class="cname">Instagram BETA &middot; Football Bets SK</div>
+        <div class="num">€0</div>
+        <div class="num">0</div>
+        <div class="num">0</div>
+        <div class="num">&mdash;</div>
+        <div class="cstat active">Beží</div>
+      </div>
+      <div class="camp-row">
+        <div class="cname">Automated Content Advertising &middot; a 2 ďalšie</div>
+        <div class="num">€0</div>
+        <div class="num">0</div>
+        <div class="num">0</div>
+        <div class="num">&mdash;</div>
+        <div class="cstat paused">Pozastavené</div>
+      </div>
+    </div>
+
+    <p class="ads-note"><b>Čo padá:</b> Engagement ThruPlay minula €51,33 a priniesla 47 klikov, čo je CTR 0,17 % a CPC €1,09. Remarketing minul takmer to isté (€49,57), ale priniesol 1 220 klikov pri CPC €0,04. To je 26-násobne lacnejší klik. <b>Čo beží naprázdno:</b> štyri BETA kampane sú aktívne, ale za 7 dní nemajú žiadne zobrazenia ani útratu.</p>
   </div>
 </section>
 
