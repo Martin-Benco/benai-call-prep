@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Príprava na hovory — Demo</title>
+<title>Command Center — Martin Sales</title>
 <style>
   :root {
     --bg: #fffef8; --bg-alt: #f8fafc;
@@ -139,6 +139,46 @@
     .header-divider, .header-title { display: none; }
   }
 </style>
+<style>
+  /* ===== ÚLOHY ===== */
+  .tasks-wrap { margin-top: 40px; }
+  .task-add { display:flex; gap:12px; margin-bottom:26px; flex-wrap:wrap; }
+  .task-add input[type=text] { flex:1; min-width:260px; font-family:var(--font); font-size:15px; padding:14px 16px; border:3px solid var(--border); background:#fff; color:var(--ink); box-shadow:var(--shadow-xs); }
+  .task-add input[type=text]:focus { outline:none; box-shadow:var(--shadow-sm); }
+  .task-add select { font-family:var(--mono); font-size:12px; font-weight:700; padding:14px 12px; border:3px solid var(--border); background:#fff; color:var(--ink); box-shadow:var(--shadow-xs); text-transform:uppercase; }
+  .task-add button { font-family:var(--mono); font-size:12px; font-weight:900; padding:14px 24px; border:3px solid var(--border); background:var(--ink); color:#fffef8; box-shadow:var(--shadow-xs); text-transform:uppercase; letter-spacing:0.08em; cursor:pointer; }
+  .task-add button:hover { background:var(--accent); }
+  .task-add button:active { box-shadow:none; transform:translate(3px,3px); }
+
+  .task-filters { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+  .tfilter { font-family:var(--mono); font-size:10px; font-weight:900; padding:7px 13px; border:2px solid var(--border); background:#fff; cursor:pointer; text-transform:uppercase; letter-spacing:0.08em; }
+  .tfilter.on { background:var(--ink); color:#fffef8; }
+  .task-count { font-family:var(--mono); font-size:11px; color:var(--text-muted); font-weight:700; margin-left:auto; text-transform:uppercase; letter-spacing:0.06em; }
+
+  .task-list { list-style:none; border:3px solid var(--border); box-shadow:var(--shadow); background:#fff; }
+  .task { display:flex; align-items:flex-start; gap:14px; padding:16px 20px; border-bottom:2px solid var(--border-light); position:relative; }
+  .task:last-child { border-bottom:none; }
+  .task::before { content:""; position:absolute; left:0; top:0; bottom:0; width:6px; background:var(--accent); }
+  .task[data-p="vysoka"]::before { background:var(--red); }
+  .task[data-p="stredna"]::before { background:var(--amber); }
+  .task[data-p="nizka"]::before  { background:var(--green); }
+  .task.done { background:var(--bg-alt); }
+  .task.done .task-text { text-decoration:line-through; color:var(--text-muted); }
+  .task-cb { width:22px; height:22px; flex:0 0 22px; border:3px solid var(--border); background:#fff; cursor:pointer; margin-top:2px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:15px; line-height:1; }
+  .task.done .task-cb { background:var(--green); color:#fff; }
+  .task-main { flex:1; min-width:0; }
+  .task-text { font-size:15px; color:var(--ink); line-height:1.45; word-wrap:break-word; }
+  .task-meta { font-family:var(--mono); font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.07em; margin-top:5px; }
+  .task-del { font-family:var(--mono); font-size:11px; font-weight:900; color:var(--text-muted); background:none; border:2px solid transparent; cursor:pointer; padding:4px 8px; }
+  .task-del:hover { color:var(--red); border-color:var(--red); }
+  .task-empty { padding:40px 20px; text-align:center; color:var(--text-muted); font-size:14px; }
+
+  .export-row { margin-top:18px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .export-btn { font-family:var(--mono); font-size:10px; font-weight:900; padding:9px 15px; border:2px solid var(--border); background:#fff; cursor:pointer; text-transform:uppercase; letter-spacing:0.08em; }
+  .export-btn:hover { background:var(--amber-pale); }
+  .export-hint { font-size:12px; color:var(--text-muted); }
+  #exportBox { width:100%; margin-top:14px; font-family:var(--mono); font-size:11px; padding:14px; border:3px solid var(--border); background:var(--bg-alt); min-height:120px; display:none; }
+</style>
 </head>
 <body>
 
@@ -150,152 +190,120 @@
       <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="3.5" fill="none"/>
       <path d="M16 23 C16 29.5 19.5 33 24 33 C28.5 33 32 29.5 32 23" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/>
     </svg>
-    <span class="brand-name">BenAI</span>
+    <span class="brand-name">Martin Sales</span>
     <div class="header-divider"></div>
-    <span class="header-title">Príprava na hovory</span>
+    <span class="header-title">Command Center</span>
   </div>
   <div class="header-meta" style="display:flex;align-items:center;gap:24px;">
     <ul class="header-nav">
-      <li><a href="#priorities">Priority</a></li>
-      <li><a href="#calls">Všetky hovory</a></li>
+      <li><a href="#ulohy">Moje úlohy</a></li>
+      <li><a href="#hovory">Hovory</a></li>
     </ul>
-    <span class="header-cta">4 Aug 2026 · Verzia 5</span>
+    <span class="header-cta">22. aug 2026</span>
   </div>
 </header>
 
 <section class="cover">
   <div class="cover-inner">
-    <h1>Príprava<br><span class="champion-mark">na hovory</span></h1>
-    <p class="cover-subtitle">4 hovory, sobota 22. augusta 2026, všetky časy SEČ. Jeden obchod treba zachrániť, jeden je pred podpisom, jeden je nový úvodný hovor.</p>
-    <div class="demo-note" style="background:#dcfce7;border-color:#111;"><b>VERZIA 5 &middot; publikované 2026-08-22 13:59 UTC</b><br>Každá karta má teraz pod sekciou Stratégia blok Firma, získaný z webu.</div>
-    <div class="demo-note"><b>Toto je demo verzia.</b> Dve karty (Daniel Kremsa, Martin Benčo) používajú reálne dáta stiahnuté cez Apify z verejných zdrojov. Ďalšie dve sú ukážkové príklady, ktoré ukazujú, ako budú vyzerať situácie záchrany a uzavretia, keď pribudnú dáta z Freshdesku a CRM.</div>
+    <h1>Command<br><span class="champion-mark">Center</span></h1>
+    <p class="cover-subtitle">Dva hovory, sobota 22. augusta 2026, všetky časy SEČ. Oba sú úvodné rozhovory s ľuďmi zo sveta social media marketingu.</p>
     <div class="hero-stats">
-      <div class="hero-stat"><span class="num">4</span><div class="label">Externé hovory</div></div>
-      <div class="hero-stat"><span class="num green">1</span><div class="label">Pred uzavretím</div></div>
-      <div class="hero-stat"><span class="num red">1</span><div class="label">Treba zachrániť</div></div>
-      <div class="hero-stat"><span class="num amber">3</span><div class="label">Úlohy</div></div>
+      <div class="hero-stat"><span class="num">2</span><div class="label">Hovory</div></div>
+      <div class="hero-stat"><span class="num green">0</span><div class="label">Pred uzavretím</div></div>
+      <div class="hero-stat"><span class="num red">0</span><div class="label">Treba zachrániť</div></div>
+      <div class="hero-stat"><span class="num amber" id="statTasks">0</span><div class="label">Otvorené úlohy</div></div>
     </div>
   </div>
 </section>
 
-<section class="section alt" id="priorities">
+<!-- ===== MOJE ÚLOHY ===== -->
+<section class="section alt" id="ulohy">
   <div class="section-inner">
-    <div class="s-label red">Toto najskôr</div>
-    <h2>Dve veci, ktoré treba vybaviť pred hovormi.</h2>
-    <p class="section-lead">Vytiahnuté z upozornení na dnešných hovoroch.</p>
-    <div class="priorities">
-      <div class="pcard">
-        <span class="badge">Hrozí strata</span>
-        <h3>Žiadna odpoveď na poslednú ponuku</h3>
-        <p>Nordic Fitness Co. stíchlo po cenovej ponuke pred 9 dňami. Pred hovorom zisti, či je skutočnou prekážkou rozpočet alebo načasovanie.</p>
-        <span class="who">Ingrid Lund · Nordic Fitness Co. · 14:00</span>
+    <div class="s-label amber">Môj zoznam</div>
+    <h2>Moje úlohy</h2>
+    <p class="section-lead">Pridaj úlohu, ostane tu. Ukladá sa v prehliadači. Cez „Exportovať“ získaš text, ktorý mi pošleš a ja ho zapíšem natrvalo do kódu.</p>
+
+    <div class="tasks-wrap">
+      <div class="task-add">
+        <input type="text" id="taskInput" placeholder="Čo treba spraviť?" autocomplete="off">
+        <select id="taskPrio">
+          <option value="vysoka">Vysoká</option>
+          <option value="stredna" selected>Stredná</option>
+          <option value="nizka">Nízka</option>
+        </select>
+        <button id="taskAdd">Pridať</button>
       </div>
-      <div class="pcard green">
-        <span class="badge">Pripravené na podpis</span>
-        <h3>Pošli zmluvu pred 16:00</h3>
-        <p>Marek to minulý týždeň potvrdil ústne. Pošli mu zmluvu do e-mailu ešte pred hovorom, aby mohol podpísať priamo počas neho.</p>
-        <span class="who">Marek Novotny · Peak Studio · 16:00</span>
+
+      <div class="task-filters">
+        <span class="tfilter on" data-f="vsetky">Všetky</span>
+        <span class="tfilter" data-f="otvorene">Otvorené</span>
+        <span class="tfilter" data-f="hotove">Hotové</span>
+        <span class="task-count" id="taskCount">0 úloh</span>
       </div>
+
+      <ul class="task-list" id="taskList"></ul>
+
+      <div class="export-row">
+        <button class="export-btn" id="btnExport">Exportovať pre Clauda</button>
+        <button class="export-btn" id="btnClearDone">Zmazať hotové</button>
+        <span class="export-hint">Export skopíruj a pošli mi ho, zapíšem úlohy natrvalo do kódu.</span>
+      </div>
+      <textarea id="exportBox" readonly></textarea>
     </div>
   </div>
 </section>
 
-<section class="section" id="calls">
+<!-- ===== HOVORY ===== -->
+<section class="section" id="hovory">
   <div class="section-inner">
-    <div class="s-label">Celý program</div>
-    <h2>Všetky štyri, po poradí.</h2>
-    <p class="section-lead">Peak Studio is the highest-leverage call today. Martin Ben&ccaron;o is the newest addition, scraped live today.</p>
+    <div class="s-label">Program</div>
+    <h2>Oba hovory, po poradí.</h2>
+    <p class="section-lead">Veronica Gentili má väčší dosah, Martina Vaculíková je bližšie k reálnemu klientskemu rozpočtu.</p>
 
     <div class="calls-grid">
 
-      <div class="call st-save">
+      <div class="call st-discovery">
         <div class="call-head">
-          <div class="call-topline"><span class="call-time">14:00 CET</span><span class="stage save">Záchrana</span></div>
-          <h3>Ingrid Lund</h3>
-          <div class="call-co">Nordic Fitness Co. · sieť butikových fitness centier, 6 pobočiek · pilotné nasadenie Boosterbergu</div>
-          <div class="call-meta">Vedie majiteľka · €400/mo rozpočtové pásmo · ponuka odoslaná pred 9 dňami, bez odpovede</div>
+          <div class="call-topline"><span class="call-time">10:00 SEČ</span><span class="stage discovery">Úvodný</span></div>
+          <h3>Veronica Gentili</h3>
+          <div class="call-co">Veronica Gentili Academy &middot; vzdelávanie v social media marketingu &middot; Taliansko</div>
+          <div class="call-meta">Vedie zakladateľka &middot; bez záznamu v CRM &middot; nájdená cez LinkedIn</div>
         </div>
         <div class="call-body">
-          <div class="flag"><b>Po cenovej ponuke stíchla.</b> Posledný e-mail od nás bola ponuka 26. júla. Žiadne otvorenie, žiadna odpoveď. Toto je demo upozornenie, zatiaľ nie reálne dáta z Freshdesku.</div>
-          <div class="cblock"><h5>Stratégia</h5><p>Začni priamou otázkou, nie opakovaním ponuky. Zisti, čo sa zmenilo od dema, namiesto toho aby si predpokladal, že ide o cenu.</p></div>
-          <div class="cblock co"><h5>Firma</h5><span class="co-name">Nordic Fitness Co.</span><span class="co-meta">Ukážka &middot; nestiahnuté</span><p>Sieť butikových fitness centier so šiestimi pobočkami. Tržby plynú z členstiev a osobných tréningov, takže platená reklama slúži hlavne na registrácie na skúšobné vstupy v okolí pobočiek.</p></div>
+          <div class="flag amber"><b>Nie je klasický klient, je to autorita.</b> Vyše 14 rokov v odbore, autorka kníh, jedna z najznámejších expertiek na social media marketing v Taliansku. Ak ju získaš, ide skôr o partnerstvo a dosah než o jeden predaj.</div>
+          <div class="cblock"><h5>Stratégia</h5><p>Neponúkaj jej nástroj na reklamu, ona ich učí. Postav hovor na tom, čo by odporúčala svojim študentom a klientom, a či by dávalo zmysel Boosterberg zaradiť do jej kurzov.</p></div>
+          <div class="cblock co"><h5>Firma</h5><span class="co-name">Veronica Gentili Academy</span><span class="co-meta">Stiahnuté &middot; verejný profil LinkedIn</span><p>Vzdelávacia platforma zameraná na Facebook a Instagram reklamu. Ponúka kurzy typu „Facebook Ads od A po Z“, ktoré absolvujú marketéri a stratégovia naprieč Talianskom. Veronica popri tom robí konzultácie a je vyhľadávaná rečníčka. Zásah teda nie je len jej vlastný, ale aj cez stovky absolventov kurzov.</p></div>
           <div class="cblock q"><h5>Pýtaj sa</h5><ul>
-            <li>Čo sa u vás zmenilo od nášho posledného rozhovoru?</li>
-            <li>Je pásmo 400 €/mes. stále reálne, alebo sa rozpočet zmenil?</li>
-            <li>Kto ďalší to musí schváliť, aby ste mohli pokračovať?</li>
+            <li>Aké nástroje dnes odporúčaš svojim študentom na správu reklám?</li>
+            <li>Čo by muselo platiť, aby si niečo zaradila do svojich kurzov?</li>
+            <li>Kde vidíš najväčšiu slabinu súčasných nástrojov na Meta reklamu?</li>
           </ul></div>
           <div class="cblock obj"><h5>Námietky</h5><ul>
-            <li><b>„Nie sme si istí, či to bude fungovať pre fitness centrum.“</b><span>Ukáž porovnateľnú prípadovú štúdiu z butikového fitness s efektivitou výdavkov pred a po.</span></li>
-            <li><b>„Načasovanie teraz nie je ideálne.“</b><span>Ponúkni ľahší 30-dňový skúšobný rozsah namiesto celého balíka, aby si znížil záväzok.</span></li>
-          </ul></div>
-        </div>
-      </div>
-
-      <div class="call st-close">
-        <div class="call-head">
-          <div class="call-topline"><span class="call-time">16:00 CET</span><span class="stage close">Uzavretie</span></div>
-          <h3>Marek Novotny</h3>
-          <div class="call-co">Peak Studio · štúdio osobných tréningov, 2 tréneri · celý balík Boosterberg</div>
-          <div class="call-meta">Zakladateľ · €650/mo rozpočtové pásmo · ústny súhlas na poslednom hovore</div>
-        </div>
-        <div class="call-body">
-          <div class="flag green"><b>Máme ústny súhlas.</b> Marek povedal áno na poslednom hovore. Tento hovor slúži na prejdenie zmluvy a podpis, nie na opätovný predaj.</div>
-          <div class="cblock"><h5>Stratégia</h5><p>Over, že sa od ústneho súhlasu nič nezmenilo, a choď rovno na prejdenie zmluvy a podpis.</p></div>
-          <div class="cblock co"><h5>Firma</h5><span class="co-name">Peak Studio</span><span class="co-meta">Ukážka &middot; nestiahnuté</span><p>Štúdio osobných tréningov s dvoma trénermi. Malý počet klientov s vysokou hodnotou, takže získanie klienta je dôležitejšie ako objem a každý nový klient sa oplatí udržať.</p></div>
-          <div class="cblock q"><h5>Pýtaj sa</h5><ul>
-            <li>Zmenilo sa u vás niečo od nášho posledného rozhovoru?</li>
-            <li>Koho máme dať do kópie pri podpísanej zmluve?</li>
-            <li>Aký dátum spustenia vám vyhovuje?</li>
-          </ul></div>
-          <div class="cblock obj"><h5>Námietky</h5><ul>
-            <li><b>„Môžeme začať radšej budúci mesiac?“</b><span>V poriadku, ale zmluvu podpíšme teraz, aby sa cena nezmenila.</span></li>
-            <li><b>„Chce to najprv vidieť môj spoločník.“</b><span>Ponúkni 15-minútový spoločný hovor ešte tento týždeň, kým nestratí záujem.</span></li>
+            <li><b>„Ja učím ľudí robiť to manuálne.“</b><span>Automatizácia nenahrádza stratégiu, ktorú učí, len odbúra opakovanú prácu pri škálovaní.</span></li>
+            <li><b>„Neodporúčam nástroje, ktoré sama nepoužívam.“</b><span>Ponúkni jej plný prístup zadarmo na jej vlastné kampane, bez záväzku odporúčania.</span></li>
           </ul></div>
         </div>
       </div>
 
       <div class="call st-discovery">
         <div class="call-head">
-          <div class="call-topline"><span class="call-time">17:30 CET</span><span class="stage discovery">Úvodný</span></div>
-          <h3>Daniel Kremsa</h3>
-          <div class="call-co">Kremsa · agentúrna firma, vývoj webov a marketing pre klientov · pôsobí ako CEO</div>
-          <div class="call-meta">Prvý rozhovor · zatiaľ bez záznamu v CRM · nájdený cez LinkedIn</div>
+          <div class="call-topline"><span class="call-time">14:00 SEČ</span><span class="stage discovery">Úvodný</span></div>
+          <h3>Martina Vaculíková</h3>
+          <div class="call-co">Fragile agency &middot; marketingová agentúra &middot; Praha, Česko</div>
+          <div class="call-meta">Head of Social Media &middot; bez záznamu v CRM &middot; nájdená cez LinkedIn</div>
         </div>
         <div class="call-body">
-          <div class="cblock"><h5>Stratégia</h5><p>Momentálne je na LinkedIne aktívny v téme AI pre marketing (MCP, Claude Code, SEO nástroje), takže o tejto oblasti už premýšľa. Postav hovor na tom, čo už sám skúma, namiesto studenej ponuky.</p></div>
-          <div class="cblock co"><h5>Firma</h5><span class="co-name">Kremsa</span><span class="co-meta">Stiahnuté &middot; verejný profil LinkedIn</span><p>Firma poskytujúca služby klientom: brand dizajn, brand marketing, vývoj webov a mobilných aplikácií, digitálny marketing a SEM. Referencie opisujú dlhodobé vzťahy s klientmi a tvorbu členských webov, takže model vyzerá skôr na dlhodobú spoluprácu než na jednorazové projekty.</p></div>
+          <div class="flag green"><b>Rozhoduje o social media naprieč klientmi.</b> Ako Head of Social Media v agentúre nespravuje jeden účet, ale celé oddelenie. Jedno áno znamená nasadenie u viacerých klientov naraz.</div>
+          <div class="cblock"><h5>Stratégia</h5><p>V jej profile je „leadership“ a „business development“, čiže nerieši len exekúciu, ale aj rast oddelenia. Hovor o tom, koľko času tímu ušetrí a čo s ním môžu robiť namiesto klikania v Ads Manageri.</p></div>
+          <div class="cblock co"><h5>Firma</h5><span class="co-name">Fragile agency</span><span class="co-meta">Stiahnuté &middot; fragile.cz</span><p>Marketingová agentúra so sídlom v Prahe. Sami sa opisujú tak, že sprevádzajú firmy a značky od digitálu až po veľké brandové kampane a spoločne budujú silné a viditeľné značky. Znamená to zmiešané portfólio výkonnostných aj brandových klientov, takže platená reklama je len jednou z viacerých služieb.</p></div>
           <div class="cblock q"><h5>Pýtaj sa</h5><ul>
-            <li>Čo ťa teraz ťahá k AI agentom pre marketing?</li>
-            <li>Ako teraz Kremsa rieši platenú reklamu na sociálnych sieťach pre klientov?</li>
-            <li>Čo by muselo takýto nástroj spĺňať, aby preň bolo u vás jednoduché rozhodnutie?</li>
+            <li>Koľko klientov dnes vedie tvoj social media tím súčasne?</li>
+            <li>Koľko času týždenne zaberie manuálna správa a boostovanie príspevkov?</li>
+            <li>Kto u vás rozhoduje o nasadení nového nástroja naprieč klientmi?</li>
           </ul></div>
           <div class="cblock obj"><h5>Námietky</h5><ul>
-            <li><b>„Vlastné nástroje si pre klientov staviame sami.“</b><span>Postav to ako infraštruktúru, ktorú môže ďalej predávať alebo pribaliť, nie ako konkurenciu jeho vývoju.</span></li>
-            <li><b>„Najprv to potrebujem vidieť fungovať na reálnom účte.“</b><span>Ponúkni pilot na jedného klienta v rozsahu 30 dní.</span></li>
-          </ul></div>
-        </div>
-      </div>
-
-      
-      <div class="call st-qualify">
-        <div class="call-head">
-          <div class="call-topline"><span class="call-time">11:00 CET</span><span class="stage qualify">Kvalifikácia</span></div>
-          <h3>Martin Ben&ccaron;o</h3>
-          <div class="call-co">B2Better &middot; marketingové a reklamné služby &middot; zároveň Product Specialist v Boosterbergu</div>
-          <div class="call-meta">Vedie zakladateľ &middot; I&Ccaron;O 56736266, Ko&scaron;ice &middot; bez záznamu v CRM</div>
-        </div>
-        <div class="call-body">
-          <div class="flag amber"><b>Wears three hats.</b> Zakladateľ of B2Better since Feb 2022, Product Specialist at Boosterberg since Feb 2026, and Co-Zakladateľ at Inova&ccaron;n&eacute; centrum Ko&scaron;ick&eacute;ho kraja since Sep 2024. Work out which one this call is really about.</div>
-          <div class="cblock"><h5>Stratégia</h5><p>Sedí na oboch stranách stola: vedie agentúru, ktorá by takýto nástroj používala, a zároveň už pracuje v Boosterbergu. Ber to ako rozhovor s partnerom alebo skúseným používateľom, nie ako studenú ponuku.</p></div>
-          <div class="cblock co"><h5>Firma</h5><span class="co-name">B2Better</span><span class="co-meta">Stiahnuté &middot; foaf.sk + Obchodný vestník</span><p>Predmet podnikania zahŕňa reklamné, marketingové, fotografické a informačné služby, prieskum trhu a verejnej mienky a služby súvisiace s produkciou filmov. Sídlo Sokolovská 178/10, Košice-Západ. Novo zapísaná ako B2Better s. r. o. 13. augusta 2026 na Okresnom súde Prešov, čiže práve prešiel zo živnosti na s. r. o. Verejný web sa nenašiel.</p></div>
-          <div class="cblock q"><h5>Pýtaj sa</h5><ul>
-            <li>V akej role si na tomto hovore, B2Better alebo Boosterberg?</li>
-            <li>Čo sa zmenilo, že si tento mesiac prešiel na s. r. o.?</li>
-            <li>Ako teraz B2Better rieši platenú reklamu na sociálnych sieťach pre klientov?</li>
-          </ul></div>
-          <div class="cblock obj"><h5>Námietky</h5><ul>
-            <li><b>„Ten produkt už poznám zvnútra.“</b><span>Tak preskoč demo a choď rovno na to, čo chýba pre agentúrne použitie.</span></li>
-            <li><b>„B2Better je malá, ten objem tam nie je.“</b><span>Postav to ako predaj na klienta, nie na používateľa, aby objem rástol s jeho portfóliom.</span></li>
+            <li><b>„Každý klient má iný proces.“</b><span>Nastavenie je per klient, takže pravidlá sa dajú prispôsobiť jednotlivo, nie plošne.</span></li>
+            <li><b>„Musela by som na to preškoliť celý tím.“</b><span>Ponúkni zaškolenie na jednom klientovi a nasadenie ďalej až podľa výsledku.</span></li>
           </ul></div>
         </div>
       </div>
@@ -311,11 +319,163 @@
         <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="3.5" fill="none"/>
         <path d="M16 23 C16 29.5 19.5 33 24 33 C28.5 33 32 29.5 32 23" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/>
       </svg>
-      <span>BenAI</span>
+      <span>Martin Sales</span>
     </div>
-    <div class="footer-meta">Príprava na hovory &middot; Verzia 5 &middot; Demo &middot; Zdroje: Apify (naživo) &middot; Web &middot; Freshdesk (čaká) &middot; CRM (čaká)</div>
+    <div class="footer-meta">Command Center &middot; 22. aug 2026 &middot; Zdroje: Apify &middot; Web &middot; LinkedIn</div>
   </div>
 </footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ====== TRVALÉ ÚLOHY ======
+  // Claude sem dopisuje úlohy natrvalo. Tieto prežijú aj vymazanie prehliadača.
+  var ULOHY_V_KODE = [
+    // { id:"k1", text:"Príklad úlohy", prio:"stredna", hotovo:false }
+  ];
+
+  var KEY = "martinsales_tasks_v1";
+  var filter = "vsetky";
+
+  function load(){
+    var local = [];
+    try { local = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){ local = []; }
+    // úlohy z kódu majú prednosť v poradí, lokálny stav (hotovo) sa na ne aplikuje
+    var stav = {};
+    local.forEach(function(t){ stav[t.id] = t; });
+    var out = ULOHY_V_KODE.map(function(t){
+      var s = stav[t.id];
+      return { id:t.id, text:t.text, prio:t.prio, hotovo: s ? s.hotovo : !!t.hotovo, zdroj:"kod" };
+    });
+    local.forEach(function(t){
+      if(!ULOHY_V_KODE.some(function(k){ return k.id === t.id; })) {
+        out.push({ id:t.id, text:t.text, prio:t.prio, hotovo:t.hotovo, zdroj:"lokal" });
+      }
+    });
+    return out;
+  }
+
+  function save(list){
+    try { localStorage.setItem(KEY, JSON.stringify(list)); } catch(e){}
+  }
+
+  var tasks = load();
+
+  var elList  = document.getElementById("taskList");
+  var elInput = document.getElementById("taskInput");
+  var elPrio  = document.getElementById("taskPrio");
+  var elCount = document.getElementById("taskCount");
+  var elStat  = document.getElementById("statTasks");
+  var elExport= document.getElementById("exportBox");
+
+  var PRIO_LABEL = { vysoka:"Vysoká", stredna:"Stredná", nizka:"Nízka" };
+
+  function render(){
+    var vis = tasks.filter(function(t){
+      if(filter === "otvorene") return !t.hotovo;
+      if(filter === "hotove")   return t.hotovo;
+      return true;
+    });
+
+    elList.innerHTML = "";
+    if(vis.length === 0){
+      var li = document.createElement("li");
+      li.className = "task-empty";
+      li.textContent = filter === "hotove" ? "Zatiaľ nič hotové." : "Žiadne úlohy. Pridaj prvú vyššie.";
+      elList.appendChild(li);
+    } else {
+      vis.forEach(function(t){
+        var li = document.createElement("li");
+        li.className = "task" + (t.hotovo ? " done" : "");
+        li.setAttribute("data-p", t.prio);
+
+        var cb = document.createElement("div");
+        cb.className = "task-cb";
+        cb.textContent = t.hotovo ? "\u2713" : "";
+        cb.addEventListener("click", function(){ toggle(t.id); });
+
+        var main = document.createElement("div");
+        main.className = "task-main";
+        var tx = document.createElement("div");
+        tx.className = "task-text";
+        tx.textContent = t.text;
+        var mt = document.createElement("div");
+        mt.className = "task-meta";
+        mt.textContent = PRIO_LABEL[t.prio] + " \u00b7 " + (t.zdroj === "kod" ? "v kóde" : "lokálne");
+        main.appendChild(tx); main.appendChild(mt);
+
+        var del = document.createElement("button");
+        del.className = "task-del";
+        del.textContent = "\u2715";
+        del.title = "Zmazať";
+        del.addEventListener("click", function(){ remove(t.id); });
+
+        li.appendChild(cb); li.appendChild(main); li.appendChild(del);
+        elList.appendChild(li);
+      });
+    }
+
+    var open = tasks.filter(function(t){ return !t.hotovo; }).length;
+    elCount.textContent = tasks.length + " \u00faloh \u00b7 " + open + " otvoren\u00fdch";
+    if(elStat) elStat.textContent = open;
+  }
+
+  function add(){
+    var v = (elInput.value || "").trim();
+    if(!v) return;
+    tasks.push({ id:"t"+Date.now(), text:v, prio:elPrio.value, hotovo:false, zdroj:"lokal" });
+    elInput.value = "";
+    persist();
+  }
+
+  function toggle(id){
+    tasks.forEach(function(t){ if(t.id===id) t.hotovo = !t.hotovo; });
+    persist();
+  }
+
+  function remove(id){
+    tasks = tasks.filter(function(t){ return t.id !== id; });
+    persist();
+  }
+
+  function persist(){
+    save(tasks.map(function(t){
+      return { id:t.id, text:t.text, prio:t.prio, hotovo:t.hotovo };
+    }));
+    render();
+  }
+
+  document.getElementById("taskAdd").addEventListener("click", add);
+  elInput.addEventListener("keydown", function(e){ if(e.key === "Enter") add(); });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".tfilter"), function(f){
+    f.addEventListener("click", function(){
+      Array.prototype.forEach.call(document.querySelectorAll(".tfilter"), function(x){ x.classList.remove("on"); });
+      f.classList.add("on");
+      filter = f.getAttribute("data-f");
+      render();
+    });
+  });
+
+  document.getElementById("btnClearDone").addEventListener("click", function(){
+    tasks = tasks.filter(function(t){ return !t.hotovo; });
+    persist();
+  });
+
+  document.getElementById("btnExport").addEventListener("click", function(){
+    var lines = tasks.map(function(t){
+      return "- [" + (t.hotovo ? "x" : " ") + "] (" + PRIO_LABEL[t.prio] + ") " + t.text;
+    });
+    elExport.value = lines.length ? ("MOJE ÚLOHY:\n" + lines.join("\n")) : "Žiadne úlohy.";
+    elExport.style.display = "block";
+    elExport.select();
+    try { document.execCommand("copy"); } catch(e){}
+  });
+
+  render();
+})();
+</script>
 
 </body>
 </html>
