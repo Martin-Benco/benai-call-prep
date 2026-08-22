@@ -211,6 +211,30 @@
     .camp-row .cname { grid-column:1 / -1; font-weight:700; }
   }
 </style>
+
+<style>
+  /* ===== NAJLEPŠIA KREATÍVA ===== */
+  .creative-wrap { margin-top:40px; border:3px solid var(--border); box-shadow:var(--shadow); background:#fff; display:grid; grid-template-columns:340px 1fr; }
+  .creative-img { border-right:3px solid var(--border); background:#000; display:flex; align-items:center; justify-content:center; padding:0; }
+  .creative-img svg { width:100%; height:auto; display:block; }
+  .creative-info { padding:30px 32px; }
+  .creative-info .win { display:inline-block; font-family:var(--mono); font-size:10px; font-weight:900; background:var(--green-pale); color:#14532d; padding:5px 11px; border:2px solid #15803d; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px; }
+  .creative-info h4 { font-size:22px; font-weight:900; letter-spacing:-0.025em; margin-bottom:6px; }
+  .creative-info .cid { font-family:var(--mono); font-size:10px; color:var(--text-muted); margin-bottom:22px; display:block; letter-spacing:0.04em; }
+  .cmetrics { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; border-top:2px solid var(--border-light); border-bottom:2px solid var(--border-light); padding:18px 0; margin-bottom:20px; }
+  .cmetrics .m .k { font-size:9px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:4px; }
+  .cmetrics .m .v { font-family:var(--mono); font-size:19px; font-weight:900; color:var(--ink); }
+  .cmetrics .m .v.good { color:var(--green); }
+  .creative-info p { font-size:14px; color:var(--text); line-height:1.6; }
+  .vs-table { margin-top:20px; width:100%; border-collapse:collapse; }
+  .vs-table th { font-family:var(--mono); font-size:9px; font-weight:900; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; text-align:left; padding:8px 10px 8px 0; border-bottom:2px solid var(--border); }
+  .vs-table td { font-size:13px; padding:9px 10px 9px 0; border-bottom:2px solid var(--border-light); }
+  .vs-table td.n { font-family:var(--mono); font-weight:900; }
+  .vs-table tr.win td { background:var(--green-pale); }
+  .vs-table td.n.good { color:var(--green); }
+  .vs-table td.n.bad { color:var(--red); }
+  @media (max-width:980px){ .creative-wrap { grid-template-columns:1fr; } .creative-img { border-right:none; border-bottom:3px solid var(--border); } .cmetrics { grid-template-columns:repeat(2,1fr); } }
+</style>
 </head>
 <body>
 
@@ -375,6 +399,57 @@
     </div>
 
     <p class="ads-note"><b>Čo padá:</b> Engagement ThruPlay minula €51,33 a priniesla 47 klikov, čo je CTR 0,17 % a CPC €1,09. Remarketing minul takmer to isté (€49,57), ale priniesol 1 220 klikov pri CPC €0,04. To je 26-násobne lacnejší klik. <b>Čo beží naprázdno:</b> štyri BETA kampane sú aktívne, ale za 7 dní nemajú žiadne zobrazenia ani útratu.</p>
+
+    <div class="creative-wrap">
+      <div class="creative-img">
+        <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Náhľad reklamy ad02 pain">
+          <rect width="400" height="500" fill="#000000"/>
+          <rect x="48" y="118" width="304" height="66" fill="none" stroke="#E8792B" stroke-width="2.5"/>
+          <text x="200" y="145" text-anchor="middle" fill="#E8792B" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">Ste skvelý realitný maklér,</text>
+          <text x="200" y="169" text-anchor="middle" fill="#E8792B" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">ale nikto o vás nevie?</text>
+          <text x="200" y="218" text-anchor="middle" fill="#E8792B" font-family="Arial, Helvetica, sans-serif" font-size="15">Postujete raz za mesiac a strácate</text>
+          <text x="200" y="242" text-anchor="middle" fill="#E8792B" font-family="Arial, Helvetica, sans-serif" font-size="15">klientov, ktorí by vás inak našli sami...</text>
+          <text x="200" y="292" text-anchor="middle" fill="#E8792B" font-family="Arial, Helvetica, sans-serif" font-size="15">Prijímame 3 klientov na budovanie</text>
+          <text x="200" y="316" text-anchor="middle" fill="#E8792B" font-family="Arial, Helvetica, sans-serif" font-size="15">osobnej značky v BA.</text>
+          <text x="200" y="360" text-anchor="middle" fill="#C4682A" font-family="Arial, Helvetica, sans-serif" font-size="12" font-style="italic">Náš posledný klient: 400K+ impresií</text>
+          <text x="200" y="378" text-anchor="middle" fill="#C4682A" font-family="Arial, Helvetica, sans-serif" font-size="12" font-style="italic">za prvý mesiac.</text>
+        </svg>
+      </div>
+      <div class="creative-info">
+        <span class="win">Najlepšia kreatíva</span>
+        <h4>ad02 pain</h4>
+        <span class="cid">120253258404270735 &middot; Campaign BA Personal brand 001</span>
+
+        <div class="cmetrics">
+          <div class="m"><span class="k">Leady</span><span class="v good">2</span></div>
+          <div class="m"><span class="k">Cena/lead</span><span class="v good">€11,62</span></div>
+          <div class="m"><span class="k">Útrata</span><span class="v">€23,24</span></div>
+          <div class="m"><span class="k">CTR</span><span class="v">1,77 %</span></div>
+        </div>
+
+        <p>Toto je jediná kreatíva z troch, ktorá priniesla leady. Obe konverzie účtu pochádzajú z nej, pritom minula najmenej peňazí z dvoch bežiacich reklám. Uhol je bolesť: pomenuje problém makléra, pridá scarcity (3 miesta) a dôkaz (400K impresií u posledného klienta).</p>
+
+        <table class="vs-table">
+          <thead>
+            <tr><th>Kreatíva</th><th>Útrata</th><th>CTR</th><th>Leady</th><th>Cena/lead</th></tr>
+          </thead>
+          <tbody>
+            <tr class="win">
+              <td>ad02 pain</td><td class="n">€23,24</td><td class="n">1,77 %</td><td class="n good">2</td><td class="n good">€11,62</td>
+            </tr>
+            <tr>
+              <td>ad01 scarcity</td><td class="n">€43,25</td><td class="n good">2,34 %</td><td class="n bad">0</td><td class="n">&mdash;</td>
+            </tr>
+            <tr>
+              <td>ad03 case study</td><td class="n">€4,07</td><td class="n bad">0,67 %</td><td class="n bad">0</td><td class="n">&mdash;</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top:18px"><b>Pozor na past:</b> ad01 scarcity má najvyššie CTR (2,34 %) a minula najviac (€43,25), ale nepriniesla ani jeden lead. Keby si optimalizoval podľa CTR, škáloval by si tú horšiu.</p>
+      </div>
+    </div>
+
     <p class="ads-note"><b>B2Better:</b> kampaň „BA Personal brand 001“ minula €70,56 a priniesla 2 leady, čiže €35,28 za lead. Či je to dobré, závisí od toho, akú hodnotu má u teba jeden lead.</p>
   </div>
 </section>
