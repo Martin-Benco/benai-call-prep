@@ -173,7 +173,6 @@
   .export-btn { font-family:var(--mono); font-size:10px; font-weight:900; padding:9px 15px; border:2px solid var(--border); background:#fff; cursor:pointer; text-transform:uppercase; letter-spacing:0.08em; }
   .export-btn:hover { background:var(--amber-pale); }
   .export-hint { font-size:12px; color:var(--text-muted); }
-  #exportBox { width:100%; margin-top:14px; font-family:var(--mono); font-size:11px; padding:14px; border:3px solid var(--border); background:var(--bg-alt); min-height:120px; display:none; }
 </style>
 </head>
 <body>
@@ -213,7 +212,7 @@
   <div class="section-inner">
     <div class="s-label amber">Môj zoznam</div>
     <h2>Moje úlohy</h2>
-    <p class="section-lead">Pridaj úlohu, ostane tu. Ukladá sa v prehliadači. Cez „Exportovať“ získaš text, ktorý mi pošleš a ja ho zapíšem natrvalo do kódu.</p>
+    <p class="section-lead">Pridaj úlohu a ostane tu. Ukladá sa automaticky v tomto prehliadači, takže prežije zavretie okna aj reštart počítača. Zálohu si môžeš kedykoľvek stiahnuť do súboru.</p>
 
     <div class="tasks-wrap">
       <div class="task-add">
@@ -236,11 +235,12 @@
       <ul class="task-list" id="taskList"></ul>
 
       <div class="export-row">
-        <button class="export-btn" id="btnExport">Exportovať pre Clauda</button>
+        <button class="export-btn" id="btnZaloha">Uložiť zálohu</button>
+        <button class="export-btn" id="btnObnovit">Obnoviť zo zálohy</button>
         <button class="export-btn" id="btnClearDone">Zmazať hotové</button>
-        <span class="export-hint">Export skopíruj a pošli mi ho, zapíšem úlohy natrvalo do kódu.</span>
+        <input type="file" id="fileObnovit" accept=".json" style="display:none">
+        <span class="export-hint" id="stavUlozenia">Ukladá sa automaticky</span>
       </div>
-      <textarea id="exportBox" readonly></textarea>
     </div>
   </div>
 </section>
@@ -329,31 +329,13 @@
     if(el) el.textContent = d.getDate() + ". " + M[d.getMonth()] + " " + d.getFullYear();
   })();
 
-  // ====== TRVALÉ ÚLOHY ======
-  // Claude sem dopisuje úlohy natrvalo. Tieto prežijú aj vymazanie prehliadača.
-  var ULOHY_V_KODE = [
-    // { id:"k1", text:"Príklad úlohy", prio:"stredna", hotovo:false }
-  ];
 
   var KEY = "martinsales_tasks_v1";
   var filter = "vsetky";
 
   function load(){
-    var local = [];
-    try { local = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){ local = []; }
-    // úlohy z kódu majú prednosť v poradí, lokálny stav (hotovo) sa na ne aplikuje
-    var stav = {};
-    local.forEach(function(t){ stav[t.id] = t; });
-    var out = ULOHY_V_KODE.map(function(t){
-      var s = stav[t.id];
-      return { id:t.id, text:t.text, prio:t.prio, hotovo: s ? s.hotovo : !!t.hotovo, zdroj:"kod" };
-    });
-    local.forEach(function(t){
-      if(!ULOHY_V_KODE.some(function(k){ return k.id === t.id; })) {
-        out.push({ id:t.id, text:t.text, prio:t.prio, hotovo:t.hotovo, zdroj:"lokal" });
-      }
-    });
-    return out;
+    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch(e){ return []; }
   }
 
   function save(list){
@@ -367,7 +349,6 @@
   var elPrio  = document.getElementById("taskPrio");
   var elCount = document.getElementById("taskCount");
   var elStat  = document.getElementById("statTasks");
-  var elExport= document.getElementById("exportBox");
 
   var PRIO_LABEL = { vysoka:"Vysoká", stredna:"Stredná", nizka:"Nízka" };
 
@@ -402,7 +383,7 @@
         tx.textContent = t.text;
         var mt = document.createElement("div");
         mt.className = "task-meta";
-        mt.textContent = PRIO_LABEL[t.prio] + " \u00b7 " + (t.zdroj === "kod" ? "v kóde" : "lokálne");
+        mt.textContent = PRIO_LABEL[t.prio] + (t.datum ? " \u00b7 " + t.datum : "");
         main.appendChild(tx); main.appendChild(mt);
 
         var del = document.createElement("button");
@@ -424,7 +405,10 @@
   function add(){
     var v = (elInput.value || "").trim();
     if(!v) return;
-    tasks.push({ id:"t"+Date.now(), text:v, prio:elPrio.value, hotovo:false, zdroj:"lokal" });
+    var d = new Date();
+    var M = ["jan","feb","mar","apr","máj","jún","júl","aug","sep","okt","nov","dec"];
+    tasks.push({ id:"t"+Date.now(), text:v, prio:elPrio.value, hotovo:false,
+                 datum: d.getDate()+". "+M[d.getMonth()] });
     elInput.value = "";
     persist();
   }
@@ -440,10 +424,18 @@
   }
 
   function persist(){
-    save(tasks.map(function(t){
-      return { id:t.id, text:t.text, prio:t.prio, hotovo:t.hotovo };
-    }));
+    save(tasks);
     render();
+    var st = document.getElementById("stavUlozenia");
+    if(st){
+      st.textContent = "Uložené \u2713";
+      st.style.color = "var(--green)";
+      clearTimeout(window.__stavT);
+      window.__stavT = setTimeout(function(){
+        st.textContent = "Ukladá sa automaticky";
+        st.style.color = "";
+      }, 1600);
+    }
   }
 
   document.getElementById("taskAdd").addEventListener("click", add);
@@ -463,14 +455,45 @@
     persist();
   });
 
-  document.getElementById("btnExport").addEventListener("click", function(){
-    var lines = tasks.map(function(t){
-      return "- [" + (t.hotovo ? "x" : " ") + "] (" + PRIO_LABEL[t.prio] + ") " + t.text;
-    });
-    elExport.value = lines.length ? ("MOJE ÚLOHY:\n" + lines.join("\n")) : "Žiadne úlohy.";
-    elExport.style.display = "block";
-    elExport.select();
-    try { document.execCommand("copy"); } catch(e){}
+  document.getElementById("btnZaloha").addEventListener("click", function(){
+    var d = new Date();
+    var meno = "ulohy-" + d.getFullYear() + "-" +
+               String(d.getMonth()+1).padStart(2,"0") + "-" +
+               String(d.getDate()).padStart(2,"0") + ".json";
+    var blob = new Blob([JSON.stringify(tasks, null, 2)], {type:"application/json"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = meno;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  document.getElementById("btnObnovit").addEventListener("click", function(){
+    document.getElementById("fileObnovit").click();
+  });
+
+  document.getElementById("fileObnovit").addEventListener("change", function(e){
+    var f = e.target.files[0];
+    if(!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try {
+        var data = JSON.parse(r.result);
+        if(!Array.isArray(data)) throw new Error("zly format");
+        var existujuce = {};
+        tasks.forEach(function(t){ existujuce[t.id] = true; });
+        var pridane = 0;
+        data.forEach(function(t){
+          if(t && t.id && t.text && !existujuce[t.id]){ tasks.push(t); pridane++; }
+        });
+        persist();
+        alert("Obnovené. Pridaných úloh: " + pridane);
+      } catch(err){
+        alert("Súbor sa nepodarilo načítať.");
+      }
+      e.target.value = "";
+    };
+    r.readAsText(f);
   });
 
   render();
