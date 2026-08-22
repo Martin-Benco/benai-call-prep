@@ -109,6 +109,8 @@
   .cblock li { font-size: 13.5px; color: var(--text); line-height: 1.5; padding: 7px 0 7px 22px; border-bottom: 2px solid var(--border-light); position: relative; }
   .cblock li:last-child { border-bottom: none; }
   .cblock.q li::before { content: "?"; position: absolute; left: 0; color: var(--accent); font-weight: 900; font-family: var(--mono); }
+  .cblock.co .co-name { font-size: 15px; font-weight: 900; letter-spacing: -0.01em; color: var(--ink); display:block; margin-bottom: 4px; }
+  .cblock.co .co-meta { font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; display:block; margin-bottom: 8px; }
   .cblock.obj li { padding-left: 0; }
   .cblock.obj li b { display: block; color: var(--ink); font-weight: 900; font-size: 13px; margin-bottom: 2px; }
   .cblock.obj li span { color: var(--text-light); }
@@ -157,7 +159,7 @@
       <li><a href="#priorities">Priorities</a></li>
       <li><a href="#calls">All Calls</a></li>
     </ul>
-    <span class="header-cta">4 Aug 2026 · Build 3</span>
+    <span class="header-cta">4 Aug 2026 · Build 4</span>
   </div>
 </header>
 
@@ -165,7 +167,7 @@
   <div class="cover-inner">
     <h1>Call Prep<br><span class="champion-mark">Command Center</span></h1>
     <p class="cover-subtitle">4 calls, Saturday 22 Aug 2026, all times CET. One deal needs a save, one is close to signing, one is a fresh discovery call.</p>
-    <div class="demo-note" style="background:#dcfce7;border-color:#111;"><b>BUILD 3 &middot; pushed 2026-08-22 13:47 UTC</b><br>New card added this build: Martin Ben&ccaron;o. Work history scraped live via Apify.</div>
+    <div class="demo-note" style="background:#dcfce7;border-color:#111;"><b>BUILD 4 &middot; pushed 2026-08-22 13:54 UTC</b><br>Every card now carries a Company block under Play, scraped from the web.</div>
     <div class="demo-note"><b>This is a demo build.</b> One card (Daniel Kremsa) uses real data pulled live via Apify from his public LinkedIn profile. The other two are placeholder examples showing how save and close situations render once Freshdesk and CRM data feed in.</div>
     <div class="hero-stats">
       <div class="hero-stat"><span class="num">4</span><div class="label">External Calls</div></div>
@@ -216,6 +218,7 @@
         <div class="call-body">
           <div class="flag"><b>Went dark after pricing.</b> Last email from us was the proposal on 26 Jul. No open tracked, no reply. This is a demo flag, not a live Freshdesk read yet.</div>
           <div class="cblock"><h5>Play</h5><p>Lead with a direct check-in, not a re-pitch. Ask what changed since the demo rather than assuming it's price.</p></div>
+          <div class="cblock co"><h5>Company</h5><span class="co-name">Nordic Fitness Co.</span><span class="co-meta">Placeholder &middot; not scraped</span><p>Boutique gym chain running six locations. Revenue comes from memberships and personal training, so paid social is used mainly for trial signups in local catchment areas.</p></div>
           <div class="cblock q"><h5>Ask</h5><ul>
             <li>What's changed on your end since we last spoke?</li>
             <li>Is the €400/mo band still realistic, or did the budget move?</li>
@@ -238,6 +241,7 @@
         <div class="call-body">
           <div class="flag green"><b>Verbal commitment received.</b> Marek said yes on the last call. This call is to walk through the contract and get a signature, not to re-sell.</div>
           <div class="cblock"><h5>Play</h5><p>Confirm nothing changed since the verbal yes, then move straight to contract walkthrough and signature.</p></div>
+          <div class="cblock co"><h5>Company</h5><span class="co-name">Peak Studio</span><span class="co-meta">Placeholder &middot; not scraped</span><p>Two-coach personal training studio. Small client roster at high ticket, so acquisition matters more than volume and each new client is worth defending.</p></div>
           <div class="cblock q"><h5>Ask</h5><ul>
             <li>Anything change on your end since we last spoke?</li>
             <li>Who should be copied on the signed agreement?</li>
@@ -259,6 +263,7 @@
         </div>
         <div class="call-body">
           <div class="cblock"><h5>Play</h5><p>He's active in AI-for-marketing content on LinkedIn right now (MCP, Claude Code, SEO tooling), so he's already thinking about this space. Frame the call around what he's already exploring rather than pitching cold.</p></div>
+          <div class="cblock co"><h5>Company</h5><span class="co-name">Kremsa</span><span class="co-meta">Scraped &middot; LinkedIn public view</span><p>Client-services operation offering brand design, brand marketing, web and mobile development, digital marketing and SEM. Recommendations describe long-running client relationships and membership-site builds, so the model looks retainer-based rather than project churn.</p></div>
           <div class="cblock q"><h5>Ask</h5><ul>
             <li>What's driving your interest in AI agent tooling for marketing right now?</li>
             <li>How does Kremsa currently handle paid social for clients?</li>
@@ -271,20 +276,22 @@
         </div>
       </div>
 
+      
       <div class="call st-qualify">
         <div class="call-head">
           <div class="call-topline"><span class="call-time">11:00 CET</span><span class="stage qualify">Qualify</span></div>
           <h3>Martin Ben&ccaron;o</h3>
-          <div class="call-co">B2Better &middot; marketing, advertising and market research services &middot; also Product Specialist at Boosterberg</div>
+          <div class="call-co">B2Better &middot; marketing and advertising services &middot; also Product Specialist at Boosterberg</div>
           <div class="call-meta">Founder-led &middot; I&Ccaron;O 56736266, Ko&scaron;ice &middot; no CRM record</div>
         </div>
         <div class="call-body">
           <div class="flag amber"><b>Wears three hats.</b> Founder of B2Better since Feb 2022, Product Specialist at Boosterberg since Feb 2026, and Co-Founder at Inova&ccaron;n&eacute; centrum Ko&scaron;ick&eacute;ho kraja since Sep 2024. Work out which one this call is really about.</div>
           <div class="cblock"><h5>Play</h5><p>He sits on both sides of the table: he runs an agency that would use a tool like this, and he already works at Boosterberg. Treat it as a partner or power-user conversation, not a cold pitch.</p></div>
+          <div class="cblock co"><h5>Company</h5><span class="co-name">B2Better</span><span class="co-meta">Scraped &middot; foaf.sk + Obchodn&yacute; vestn&iacute;k</span><p>Registered trade covers advertising, marketing, photographic and information services, market and public opinion research, plus film production support. Based at Sokolovsk&aacute; 178/10, Ko&scaron;ice-Z&aacute;pad. Newly incorporated as B2Better s. r. o. on 13 Aug 2026 at Okresn&yacute; s&uacute;d Pre&scaron;ov, so it has just moved from sole trader to limited company. No public website found.</p></div>
           <div class="cblock q"><h5>Ask</h5><ul>
             <li>Which hat are you wearing for this one, B2Better or Boosterberg?</li>
+            <li>What changed that made you incorporate as s. r. o. this month?</li>
             <li>How does B2Better currently run paid social for its clients?</li>
-            <li>What would make this worth putting in front of your own clients?</li>
           </ul></div>
           <div class="cblock obj"><h5>Objections</h5><ul>
             <li><b>"I already know the product from the inside."</b><span>Then skip the demo and go straight to what is missing for agency use.</span></li>
@@ -306,7 +313,7 @@
       </svg>
       <span>BenAI</span>
     </div>
-    <div class="footer-meta">Sales Call Prep · 4 Aug 2026 · Build 3 · Sources: Apify (live) · Web · Freshdesk (pending) · CRM (pending)</div>
+    <div class="footer-meta">Sales Call Prep · 4 Aug 2026 · Build 4 · Sources: Apify (live) · Web · Freshdesk (pending) · CRM (pending)</div>
   </div>
 </footer>
 
