@@ -235,6 +235,25 @@
   .vs-table td.n.bad { color:var(--red); }
   @media (max-width:980px){ .creative-wrap { grid-template-columns:1fr; } .creative-img { border-right:none; border-bottom:3px solid var(--border); } .cmetrics { grid-template-columns:repeat(2,1fr); } }
 </style>
+
+<style>
+  /* ===== DRAG + TAGY ===== */
+  .task-grip { flex:0 0 18px; width:18px; height:22px; margin-top:2px; cursor:grab; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:15px; line-height:1; user-select:none; }
+  .task-grip:active { cursor:grabbing; }
+  .task-grip:hover { color:var(--ink); }
+  .task.dragging { opacity:0.4; }
+  .task.over-top { box-shadow:inset 0 4px 0 var(--accent); }
+  .task.over-bot { box-shadow:inset 0 -4px 0 var(--accent); }
+  .tag { font-family:var(--mono); font-size:9px; font-weight:900; padding:3px 8px; border:2px solid var(--border); text-transform:uppercase; letter-spacing:0.08em; cursor:pointer; white-space:nowrap; }
+  .tag.primary   { background:var(--red-pale);    color:#7f1d1d; border-color:#991b1b; }
+  .tag.secondary { background:var(--accent-pale); color:#1e3a8a; border-color:#1d4ed8; }
+  .task-tagwrap { flex:0 0 auto; margin-top:1px; }
+  #taskTag { min-width:120px; }
+  @media (max-width:720px){
+    .task { flex-wrap:wrap; }
+    .task-tagwrap { order:3; margin-left:36px; }
+  }
+</style>
 </head>
 <body>
 
@@ -273,7 +292,7 @@
   <div class="section-inner">
     <div class="s-label amber">Môj zoznam</div>
     <h2>Moje úlohy</h2>
-    <p class="section-lead">Pridaj úlohu a ostane tu. Ukladá sa automaticky v tomto prehliadači, takže prežije zavretie okna aj reštart počítača. Zálohu si môžeš kedykoľvek stiahnuť do súboru.</p>
+    <p class="section-lead">Pridaj úlohu a ostane tu. Ukladá sa automaticky v tomto prehliadači, takže prežije zavretie okna aj reštart počítača. Poradie meníš potiahnutím za úchyt vľavo, tag prepneš kliknutím naň. Zálohu si môžeš kedykoľvek stiahnuť do súboru.</p>
 
     <div class="tasks-wrap">
       <div class="task-add">
@@ -282,6 +301,10 @@
           <option value="vysoka">Vysoká</option>
           <option value="stredna" selected>Stredná</option>
           <option value="nizka">Nízka</option>
+        </select>
+        <select id="taskTag">
+          <option value="primary" selected>Primary</option>
+          <option value="secondary">Secondary</option>
         </select>
         <button id="taskAdd">Pridať</button>
       </div>
@@ -301,6 +324,7 @@
         <button class="export-btn" id="btnClearDone">Zmazať hotové</button>
         <input type="file" id="fileObnovit" accept=".json" style="display:none">
         <span class="export-hint" id="stavUlozenia">Ukladá sa automaticky</span>
+        <span class="export-hint" id="dragPozn" style="display:none;color:var(--amber)">Presúvanie funguje len vo filtri „Všetky“.</span>
       </div>
     </div>
   </div>
@@ -541,6 +565,7 @@
 
   var KEY = "martinsales_tasks_v1";
   var filter = "vsetky";
+  var dragId = null;
 
   function load(){
     try { return JSON.parse(localStorage.getItem(KEY)) || []; }
@@ -579,6 +604,12 @@
         var li = document.createElement("li");
         li.className = "task" + (t.hotovo ? " done" : "");
         li.setAttribute("data-p", t.prio);
+        li.draggable = true;
+
+        var grip = document.createElement("div");
+        grip.className = "task-grip";
+        grip.textContent = "\u2059";
+        grip.title = "Potiahni pre presun";
 
         var cb = document.createElement("div");
         cb.className = "task-cb";
@@ -595,13 +626,53 @@
         mt.textContent = PRIO_LABEL[t.prio] + (t.datum ? " \u00b7 " + t.datum : "");
         main.appendChild(tx); main.appendChild(mt);
 
+        var tagw = document.createElement("div");
+        tagw.className = "task-tagwrap";
+        var tagVal = t.tag || "primary";
+        var tg = document.createElement("span");
+        tg.className = "tag " + tagVal;
+        tg.textContent = tagVal === "primary" ? "Primary" : "Secondary";
+        tg.title = "Klikni pre prepnutie";
+        tg.addEventListener("click", function(){ prepniTag(t.id); });
+        tagw.appendChild(tg);
+
         var del = document.createElement("button");
         del.className = "task-del";
         del.textContent = "\u2715";
         del.title = "Zmazať";
         del.addEventListener("click", function(){ remove(t.id); });
 
-        li.appendChild(cb); li.appendChild(main); li.appendChild(del);
+        li.appendChild(grip); li.appendChild(cb); li.appendChild(main);
+        li.appendChild(tagw); li.appendChild(del);
+
+        li.addEventListener("dragstart", function(e){
+          if(filter !== "vsetky"){ e.preventDefault(); return; }
+          dragId = t.id;
+          li.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+          try { e.dataTransfer.setData("text/plain", t.id); } catch(err){}
+        });
+        li.addEventListener("dragend", function(){
+          dragId = null; li.classList.remove("dragging"); cistiZvyraznenie();
+        });
+        li.addEventListener("dragover", function(e){
+          if(!dragId || dragId === t.id) return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          var r = li.getBoundingClientRect();
+          cistiZvyraznenie();
+          li.classList.add((e.clientY - r.top) < r.height/2 ? "over-top" : "over-bot");
+        });
+        li.addEventListener("dragleave", function(){
+          li.classList.remove("over-top","over-bot");
+        });
+        li.addEventListener("drop", function(e){
+          e.preventDefault();
+          if(!dragId || dragId === t.id) return;
+          var r = li.getBoundingClientRect();
+          presun(dragId, t.id, (e.clientY - r.top) < r.height/2);
+        });
+
         elList.appendChild(li);
       });
     }
@@ -611,12 +682,39 @@
     if(elStat) elStat.textContent = open;
   }
 
+  function cistiZvyraznenie(){
+    Array.prototype.forEach.call(elList.querySelectorAll(".task"), function(x){
+      x.classList.remove("over-top","over-bot");
+    });
+  }
+
+  function presun(zId, naId, hore){
+    var zIdx = -1, i;
+    for(i=0;i<tasks.length;i++){ if(tasks[i].id === zId){ zIdx = i; break; } }
+    if(zIdx < 0) return;
+    var item = tasks.splice(zIdx, 1)[0];
+    var naIdx = -1;
+    for(i=0;i<tasks.length;i++){ if(tasks[i].id === naId){ naIdx = i; break; } }
+    if(naIdx < 0){ tasks.splice(zIdx, 0, item); return; }
+    tasks.splice(hore ? naIdx : naIdx + 1, 0, item);
+    persist();
+  }
+
+  function prepniTag(id){
+    tasks.forEach(function(t){
+      if(t.id === id) t.tag = (t.tag === "secondary") ? "primary" : "secondary";
+    });
+    persist();
+  }
+
   function add(){
     var v = (elInput.value || "").trim();
     if(!v) return;
     var d = new Date();
     var M = ["jan","feb","mar","apr","máj","jún","júl","aug","sep","okt","nov","dec"];
+    var tagEl = document.getElementById("taskTag");
     tasks.push({ id:"t"+Date.now(), text:v, prio:elPrio.value, hotovo:false,
+                 tag: tagEl ? tagEl.value : "primary",
                  datum: d.getDate()+". "+M[d.getMonth()] });
     elInput.value = "";
     persist();
@@ -655,6 +753,8 @@
       Array.prototype.forEach.call(document.querySelectorAll(".tfilter"), function(x){ x.classList.remove("on"); });
       f.classList.add("on");
       filter = f.getAttribute("data-f");
+      var pozn = document.getElementById("dragPozn");
+      if(pozn) pozn.style.display = (filter === "vsetky") ? "none" : "inline";
       render();
     });
   });
