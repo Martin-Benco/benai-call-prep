@@ -254,6 +254,20 @@
     .task-tagwrap { order:3; margin-left:36px; }
   }
 </style>
+
+<style>
+  /* ===== FLIP ANIMÁCIA ÚLOH ===== */
+  .task { transition: background 0.25s ease; will-change: transform; }
+  .task.anim { transition: transform 0.42s cubic-bezier(0.22, 0.61, 0.36, 1), background 0.25s ease; }
+  .task.flash-done { animation: flashDone 0.6s ease; }
+  @keyframes flashDone {
+    0%   { background: var(--green-pale); }
+    100% { background: var(--bg-alt); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .task, .task.anim { transition: none !important; animation: none !important; }
+  }
+</style>
 </head>
 <body>
 
@@ -604,6 +618,7 @@
         var li = document.createElement("li");
         li.className = "task" + (t.hotovo ? " done" : "");
         li.setAttribute("data-p", t.prio);
+        li.setAttribute("data-id", t.id);
         li.draggable = true;
 
         var grip = document.createElement("div");
@@ -721,8 +736,73 @@
   }
 
   function toggle(id){
-    tasks.forEach(function(t){ if(t.id===id) t.hotovo = !t.hotovo; });
-    persist();
+    // zapamataj si pozicie pred zmenou (FLIP: First)
+    var prve = {};
+    Array.prototype.forEach.call(elList.querySelectorAll(".task"), function(el){
+      prve[el.getAttribute("data-id")] = el.getBoundingClientRect().top;
+    });
+
+    var idx = -1, i;
+    for(i=0;i<tasks.length;i++){ if(tasks[i].id === id){ idx = i; break; } }
+    if(idx < 0) return;
+
+    tasks[idx].hotovo = !tasks[idx].hotovo;
+    var stalSaHotovym = tasks[idx].hotovo;
+
+    if(stalSaHotovym){
+      // presun na koniec zoznamu
+      var item = tasks.splice(idx, 1)[0];
+      tasks.push(item);
+    } else {
+      // vrat nad prvu hotovu ulohu
+      var item2 = tasks.splice(idx, 1)[0];
+      var prvaHotova = tasks.length;
+      for(i=0;i<tasks.length;i++){ if(tasks[i].hotovo){ prvaHotova = i; break; } }
+      tasks.splice(prvaHotova, 0, item2);
+    }
+
+    save(tasks);
+    render();
+    animujPresun(prve, id, stalSaHotovym);
+    stavUlozene();
+  }
+
+  function animujPresun(prve, zmenenyId, stalSaHotovym){
+    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    Array.prototype.forEach.call(elList.querySelectorAll(".task"), function(el){
+      var tid = el.getAttribute("data-id");
+      if(!(tid in prve)) return;
+
+      // FLIP: Last -> Invert
+      var nova = el.getBoundingClientRect().top;
+      var delta = prve[tid] - nova;
+      if(Math.abs(delta) < 1) return;
+
+      el.style.transform = "translateY(" + delta + "px)";
+      el.classList.remove("anim");
+
+      // Play
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          el.classList.add("anim");
+          el.style.transform = "";
+        });
+      });
+
+      setTimeout(function(){
+        el.classList.remove("anim");
+        el.style.transform = "";
+      }, 460);
+    });
+
+    if(stalSaHotovym){
+      var cil = elList.querySelector('[data-id="' + zmenenyId + '"]');
+      if(cil){
+        cil.classList.add("flash-done");
+        setTimeout(function(){ cil.classList.remove("flash-done"); }, 620);
+      }
+    }
   }
 
   function remove(id){
@@ -730,9 +810,7 @@
     persist();
   }
 
-  function persist(){
-    save(tasks);
-    render();
+  function stavUlozene(){
     var st = document.getElementById("stavUlozenia");
     if(st){
       st.textContent = "Uložené \u2713";
@@ -743,6 +821,12 @@
         st.style.color = "";
       }, 1600);
     }
+  }
+
+  function persist(){
+    save(tasks);
+    render();
+    stavUlozene();
   }
 
   document.getElementById("taskAdd").addEventListener("click", add);
