@@ -1040,8 +1040,27 @@
     r.textContent = "Premenovať";
     r.title = "Premenuj aktívny účet";
     r.addEventListener("click", function(){
-      var n = prompt("Nový názov účtu:", data.ucty[data.aktivny].nazov);
-      if(n && n.trim()){ data.ucty[data.aktivny].nazov = n.trim(); uloz(); kresli(); }
+      var tab = elTabs.querySelector(".li-tab.on");
+      if(!tab) return;
+      var cnt = tab.querySelector(".cnt");
+      if(cnt) cnt.style.display = "none";
+      tab.contentEditable = "true";
+      tab.spellcheck = false;
+      tab.focus();
+      var rng = document.createRange();
+      rng.selectNodeContents(tab);
+      var sel = window.getSelection();
+      sel.removeAllRanges(); sel.addRange(rng);
+      function hotovo(){
+        tab.contentEditable = "false";
+        var v = tab.textContent.replace(/\d+\s*$/, "").trim();
+        if(v) data.ucty[data.aktivny].nazov = v;
+        uloz(); kresli();
+      }
+      tab.addEventListener("blur", hotovo, { once:true });
+      tab.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){ e.preventDefault(); tab.blur(); }
+      });
     });
     elTabs.appendChild(r);
   }
@@ -1065,8 +1084,12 @@
       var head = document.createElement("div");
       head.className = "li-cat-head";
       var h = document.createElement("h4");
-      h.textContent = cat.nazov + "  (" + cat.sablony.length + ")";
+      h.textContent = cat.nazov;
       head.appendChild(h);
+      var pc = document.createElement("span");
+      pc.style.cssText = "font-family:var(--mono);font-size:10px;color:var(--text-muted);font-weight:700;";
+      pc.textContent = cat.sablony.length + " ks";
+      head.appendChild(pc);
 
       if(ci > 0){
         var up = document.createElement("button");
@@ -1087,20 +1110,36 @@
         head.appendChild(dn);
       }
 
-      var ren = document.createElement("button");
-      ren.className = "catbtn"; ren.textContent = "Premenovať";
-      ren.addEventListener("click", function(){
-        var n = prompt("Nový názov kategórie:", cat.nazov);
-        if(n && n.trim()){ cat.nazov = n.trim(); uloz(); kresli(); }
+      h.contentEditable = "true";
+      h.spellcheck = false;
+      h.style.cursor = "text";
+      h.title = "Klikni a uprav názov";
+      h.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){ e.preventDefault(); h.blur(); }
       });
-      head.appendChild(ren);
+      h.addEventListener("blur", function(){
+        var v = h.textContent.replace(/\s*\(\d+\)\s*$/, "").trim();
+        if(v){ cat.nazov = v; } 
+        uloz(); kresli();
+      });
 
       var dl = document.createElement("button");
       dl.className = "catbtn del"; dl.textContent = "Zmazať";
+      var potvrdC = false;
       dl.addEventListener("click", function(){
-        if(confirm("Zmazať kategóriu \"" + cat.nazov + "\" aj so šablónami?")){
-          u.kategorie.splice(ci,1); uloz(); kresli();
+        if(!potvrdC){
+          potvrdC = true;
+          dl.textContent = "Naozaj?";
+          dl.style.background = "var(--red-pale)";
+          dl.style.borderColor = "var(--red)";
+          setTimeout(function(){
+            potvrdC = false;
+            dl.textContent = "Zmazať";
+            dl.style.background = ""; dl.style.borderColor = "";
+          }, 2600);
+          return;
         }
+        u.kategorie.splice(ci,1); uloz(); kresli();
       });
       head.appendChild(dl);
       box.appendChild(head);
@@ -1116,9 +1155,15 @@
         nm.textContent = tpl.nazov;
         nm.title = "Klikni pre premenovanie";
         nm.style.cursor = "pointer";
-        nm.addEventListener("click", function(){
-          var n = prompt("Názov šablóny:", tpl.nazov);
-          if(n && n.trim()){ tpl.nazov = n.trim(); uloz(); kresli(); }
+        nm.contentEditable = "true";
+        nm.spellcheck = false;
+        nm.addEventListener("keydown", function(e){
+          if(e.key === "Enter"){ e.preventDefault(); nm.blur(); }
+        });
+        nm.addEventListener("blur", function(){
+          var v = nm.textContent.trim();
+          if(v){ tpl.nazov = v; } else { nm.textContent = tpl.nazov; }
+          uloz();
         });
         top.appendChild(nm);
 
@@ -1138,16 +1183,28 @@
         var dd = document.createElement("button");
         dd.className = "li-tpl-btn del"; dd.textContent = "\u2715";
         dd.title = "Zmazať šablónu";
+        var potvrd = false;
         dd.addEventListener("click", function(){
-          if(confirm("Zmazať šablónu \"" + tpl.nazov + "\"?")){
-            cat.sablony.splice(ti,1); uloz(); kresli();
+          if(!potvrd){
+            potvrd = true;
+            dd.textContent = "Naozaj?";
+            dd.style.background = "var(--red-pale)";
+            dd.style.borderColor = "var(--red)";
+            setTimeout(function(){
+              potvrd = false;
+              dd.textContent = "\u2715";
+              dd.style.background = ""; dd.style.borderColor = "";
+            }, 2600);
+            return;
           }
+          cat.sablony.splice(ti,1); uloz(); kresli();
         });
         top.appendChild(dd);
         t.appendChild(top);
 
         var tx = document.createElement("div");
         tx.className = "li-tpl-txt";
+        tx.setAttribute("data-tplid", tpl.id);
         tx.contentEditable = "true";
         tx.spellcheck = false;
         tx.textContent = tpl.text;
@@ -1171,11 +1228,21 @@
       addw.className = "li-addtpl";
       var ab = document.createElement("button");
       ab.textContent = "+ Pridať šablónu do \"" + cat.nazov + "\"";
-      ab.addEventListener("click", function(){
-        var n = prompt("Názov šablóny:", "Nová šablóna");
-        if(n === null) return;
-        cat.sablony.push({ id:nid(), nazov:(n.trim() || "Nová šablóna"), text:"" });
-        uloz(); kresli();
+      ab.addEventListener("click", function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        var novyId = nid();
+        cat.sablony.push({ id:novyId, nazov:"Nová šablóna " + (cat.sablony.length + 1), text:"" });
+        uloz();
+        kresli();
+        // po prekresleni zaostri na novy text a odscroluj nan
+        setTimeout(function(){
+          var el = document.querySelector('[data-tplid="' + novyId + '"]');
+          if(el){
+            el.scrollIntoView({ behavior:"smooth", block:"center" });
+            el.focus();
+          }
+        }, 60);
       });
       addw.appendChild(ab);
       box.appendChild(addw);
