@@ -268,6 +268,49 @@
     .task, .task.anim { transition: none !important; animation: none !important; }
   }
 </style>
+
+<style>
+  /* ===== LINKEDIN ŠABLÓNY ===== */
+  .li-tabs { display:flex; gap:0; margin-top:38px; border-bottom:3px solid var(--border); flex-wrap:wrap; }
+  .li-tab { font-family:var(--mono); font-size:11px; font-weight:900; padding:14px 22px; border:3px solid var(--border); border-bottom:none; background:var(--bg-alt); cursor:pointer; text-transform:uppercase; letter-spacing:0.07em; margin-right:-3px; position:relative; color:var(--text-light); }
+  .li-tab.on { background:var(--ink); color:#fffef8; z-index:2; }
+  .li-tab .cnt { font-size:9px; opacity:0.6; margin-left:6px; }
+  .li-rename { font-family:var(--mono); font-size:10px; font-weight:900; padding:14px 14px; border:3px solid var(--border); border-bottom:none; background:#fff; cursor:pointer; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-muted); }
+  .li-rename:hover { background:var(--amber-pale); color:var(--ink); }
+
+  .li-body { border:3px solid var(--border); border-top:none; box-shadow:var(--shadow); background:#fff; padding:28px; }
+  .li-addcat { display:flex; gap:10px; margin-bottom:26px; flex-wrap:wrap; }
+  .li-addcat input { flex:1; min-width:220px; font-family:var(--font); font-size:14px; padding:12px 14px; border:3px solid var(--border); background:#fff; }
+  .li-addcat input:focus { outline:none; box-shadow:var(--shadow-xs); }
+  .li-addcat button { font-family:var(--mono); font-size:11px; font-weight:900; padding:12px 20px; border:3px solid var(--border); background:var(--ink); color:#fffef8; cursor:pointer; text-transform:uppercase; letter-spacing:0.08em; }
+  .li-addcat button:hover { background:var(--accent); }
+
+  .li-cat { margin-bottom:30px; border:3px solid var(--border); }
+  .li-cat-head { display:flex; align-items:center; gap:12px; padding:14px 18px; background:var(--bg-alt); border-bottom:3px solid var(--border); }
+  .li-cat-head h4 { font-size:15px; font-weight:900; letter-spacing:-0.01em; flex:1; }
+  .li-cat-head .catbtn { font-family:var(--mono); font-size:10px; font-weight:900; padding:6px 11px; border:2px solid var(--border); background:#fff; cursor:pointer; text-transform:uppercase; letter-spacing:0.07em; }
+  .li-cat-head .catbtn:hover { background:var(--accent-pale); }
+  .li-cat-head .catbtn.del:hover { background:var(--red-pale); border-color:var(--red); color:var(--red); }
+
+  .li-tpl { padding:18px; border-bottom:2px solid var(--border-light); }
+  .li-tpl:last-child { border-bottom:none; }
+  .li-tpl-top { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+  .li-tpl-name { font-family:var(--mono); font-size:11px; font-weight:900; color:var(--ink); flex:1; text-transform:uppercase; letter-spacing:0.06em; }
+  .li-tpl-btn { font-family:var(--mono); font-size:10px; font-weight:900; padding:5px 10px; border:2px solid var(--border); background:#fff; cursor:pointer; text-transform:uppercase; letter-spacing:0.06em; }
+  .li-tpl-btn:hover { background:var(--green-pale); }
+  .li-tpl-btn.del:hover { background:var(--red-pale); border-color:var(--red); color:var(--red); }
+  .li-tpl-txt { font-size:14px; line-height:1.65; color:var(--text); white-space:pre-wrap; word-wrap:break-word; background:var(--bg); border:2px solid var(--border-light); padding:14px; cursor:text; }
+  .li-tpl-txt:focus { outline:none; border-color:var(--accent); background:#fff; }
+  .li-tpl-txt:empty::before { content:"Klikni a napíš šablónu..."; color:var(--text-muted); }
+  .li-tpl-meta { font-family:var(--mono); font-size:9px; color:var(--text-muted); margin-top:7px; text-transform:uppercase; letter-spacing:0.06em; }
+
+  .li-addtpl { padding:14px 18px; background:var(--bg-alt); }
+  .li-addtpl button { font-family:var(--mono); font-size:10px; font-weight:900; padding:9px 16px; border:2px dashed var(--border); background:transparent; cursor:pointer; text-transform:uppercase; letter-spacing:0.07em; width:100%; }
+  .li-addtpl button:hover { background:#fff; border-style:solid; }
+  .li-empty { padding:36px 18px; text-align:center; color:var(--text-muted); font-size:14px; }
+  .li-tools { margin-top:20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  @media (max-width:720px){ .li-tab { padding:12px 14px; font-size:10px; } .li-body { padding:18px; } }
+</style>
 </head>
 <body>
 
@@ -344,6 +387,31 @@
   </div>
 </section>
 
+
+
+<!-- ===== LINKEDIN ŠABLÓNY ===== -->
+<section class="section alt" id="linkedin">
+  <div class="section-inner">
+    <div class="s-label">Outreach</div>
+    <h2>LinkedIn šablóny</h2>
+    <p class="section-lead">Tri účty, ku každému vlastné kategórie a šablóny. Text upravíš priamo kliknutím doňho, všetko sa ukladá automaticky.</p>
+
+    <div class="li-tabs" id="liTabs"></div>
+    <div class="li-body">
+      <div class="li-addcat">
+        <input type="text" id="liCatInput" placeholder="Názov novej kategórie (napr. Follow-up, Námietka...)" autocomplete="off">
+        <button id="liCatAdd">Pridať kategóriu</button>
+      </div>
+      <div id="liCats"></div>
+      <div class="li-tools">
+        <button class="export-btn" id="liZaloha">Uložiť zálohu šablón</button>
+        <button class="export-btn" id="liObnovit">Obnoviť zo zálohy</button>
+        <input type="file" id="liFile" accept=".json" style="display:none">
+        <span class="export-hint" id="liStav">Ukladá sa automaticky</span>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ===== VÝKON REKLÁM ===== -->
 <section class="section" id="reklamy">
@@ -890,6 +958,277 @@
   });
 
   render();
+})();
+</script>
+
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "martinsales_linkedin_v1";
+
+  var VYCHOZI = {
+    aktivny: 0,
+    ucty: [
+      { nazov:"Účet 1", kategorie:[
+        { id:"c1", nazov:"Prvá správa", sablony:[
+          { id:"t1", nazov:"Úvodné oslovenie", text:"Ahoj {meno},\n\nvšimol som si, že {dôvod}. Robíme {čo} a napadlo mi, že by to mohlo dávať zmysel aj u vás.\n\nDá sa k tomu na 15 minút ozvať?" }
+        ]},
+        { id:"c2", nazov:"Odpoveď", sablony:[
+          { id:"t2", nazov:"Keď prejavia záujem", text:"Super, ďakujem za rýchlu odpoveď.\n\nPošlem ti pár termínov: {termíny}\n\nVyhovuje niektorý?" },
+          { id:"t3", nazov:"Keď odmietnu", text:"Rozumiem, ďakujem za priamu odpoveď.\n\nKeby sa situácia zmenila, ozvi sa. Držím palce." }
+        ]}
+      ]},
+      { nazov:"Účet 2", kategorie:[
+        { id:"c3", nazov:"Prvá správa", sablony:[] },
+        { id:"c4", nazov:"Odpoveď", sablony:[] }
+      ]},
+      { nazov:"Účet 3", kategorie:[
+        { id:"c5", nazov:"Prvá správa", sablony:[] },
+        { id:"c6", nazov:"Odpoveď", sablony:[] }
+      ]}
+    ]
+  };
+
+  var data;
+  try {
+    data = JSON.parse(localStorage.getItem(KEY));
+    if(!data || !data.ucty || !data.ucty.length) data = VYCHOZI;
+  } catch(e){ data = VYCHOZI; }
+  if(typeof data.aktivny !== "number") data.aktivny = 0;
+
+  var elTabs = document.getElementById("liTabs");
+  var elCats = document.getElementById("liCats");
+  if(!elTabs || !elCats) return;
+
+  function uloz(){
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e){}
+    var st = document.getElementById("liStav");
+    if(st){
+      st.textContent = "Uložené \u2713";
+      st.style.color = "var(--green)";
+      clearTimeout(window.__liT);
+      window.__liT = setTimeout(function(){
+        st.textContent = "Ukladá sa automaticky"; st.style.color = "";
+      }, 1600);
+    }
+  }
+
+  function nid(){ return "x" + Date.now() + Math.floor(Math.random()*1000); }
+
+  function pocetSablon(u){
+    var n = 0;
+    u.kategorie.forEach(function(c){ n += c.sablony.length; });
+    return n;
+  }
+
+  function kresliTabs(){
+    elTabs.innerHTML = "";
+    data.ucty.forEach(function(u, i){
+      var b = document.createElement("div");
+      b.className = "li-tab" + (i === data.aktivny ? " on" : "");
+      b.textContent = u.nazov;
+      var c = document.createElement("span");
+      c.className = "cnt";
+      c.textContent = pocetSablon(u);
+      b.appendChild(c);
+      b.addEventListener("click", function(){ data.aktivny = i; uloz(); kresli(); });
+      elTabs.appendChild(b);
+    });
+    var r = document.createElement("div");
+    r.className = "li-rename";
+    r.textContent = "Premenovať";
+    r.title = "Premenuj aktívny účet";
+    r.addEventListener("click", function(){
+      var n = prompt("Nový názov účtu:", data.ucty[data.aktivny].nazov);
+      if(n && n.trim()){ data.ucty[data.aktivny].nazov = n.trim(); uloz(); kresli(); }
+    });
+    elTabs.appendChild(r);
+  }
+
+  function kresliKategorie(){
+    var u = data.ucty[data.aktivny];
+    elCats.innerHTML = "";
+
+    if(!u.kategorie.length){
+      var e = document.createElement("div");
+      e.className = "li-empty";
+      e.textContent = "Žiadne kategórie. Pridaj prvú vyššie.";
+      elCats.appendChild(e);
+      return;
+    }
+
+    u.kategorie.forEach(function(cat, ci){
+      var box = document.createElement("div");
+      box.className = "li-cat";
+
+      var head = document.createElement("div");
+      head.className = "li-cat-head";
+      var h = document.createElement("h4");
+      h.textContent = cat.nazov + "  (" + cat.sablony.length + ")";
+      head.appendChild(h);
+
+      if(ci > 0){
+        var up = document.createElement("button");
+        up.className = "catbtn"; up.textContent = "\u2191"; up.title = "Posunúť hore";
+        up.addEventListener("click", function(){
+          var t = u.kategorie[ci-1]; u.kategorie[ci-1] = u.kategorie[ci]; u.kategorie[ci] = t;
+          uloz(); kresli();
+        });
+        head.appendChild(up);
+      }
+      if(ci < u.kategorie.length - 1){
+        var dn = document.createElement("button");
+        dn.className = "catbtn"; dn.textContent = "\u2193"; dn.title = "Posunúť dole";
+        dn.addEventListener("click", function(){
+          var t = u.kategorie[ci+1]; u.kategorie[ci+1] = u.kategorie[ci]; u.kategorie[ci] = t;
+          uloz(); kresli();
+        });
+        head.appendChild(dn);
+      }
+
+      var ren = document.createElement("button");
+      ren.className = "catbtn"; ren.textContent = "Premenovať";
+      ren.addEventListener("click", function(){
+        var n = prompt("Nový názov kategórie:", cat.nazov);
+        if(n && n.trim()){ cat.nazov = n.trim(); uloz(); kresli(); }
+      });
+      head.appendChild(ren);
+
+      var dl = document.createElement("button");
+      dl.className = "catbtn del"; dl.textContent = "Zmazať";
+      dl.addEventListener("click", function(){
+        if(confirm("Zmazať kategóriu \"" + cat.nazov + "\" aj so šablónami?")){
+          u.kategorie.splice(ci,1); uloz(); kresli();
+        }
+      });
+      head.appendChild(dl);
+      box.appendChild(head);
+
+      cat.sablony.forEach(function(tpl, ti){
+        var t = document.createElement("div");
+        t.className = "li-tpl";
+
+        var top = document.createElement("div");
+        top.className = "li-tpl-top";
+        var nm = document.createElement("div");
+        nm.className = "li-tpl-name";
+        nm.textContent = tpl.nazov;
+        nm.title = "Klikni pre premenovanie";
+        nm.style.cursor = "pointer";
+        nm.addEventListener("click", function(){
+          var n = prompt("Názov šablóny:", tpl.nazov);
+          if(n && n.trim()){ tpl.nazov = n.trim(); uloz(); kresli(); }
+        });
+        top.appendChild(nm);
+
+        var cp = document.createElement("button");
+        cp.className = "li-tpl-btn"; cp.textContent = "Kopírovať";
+        cp.addEventListener("click", function(){
+          var ta = document.createElement("textarea");
+          ta.value = tpl.text;
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand("copy"); } catch(e){}
+          document.body.removeChild(ta);
+          cp.textContent = "Skopírované \u2713";
+          setTimeout(function(){ cp.textContent = "Kopírovať"; }, 1400);
+        });
+        top.appendChild(cp);
+
+        var dd = document.createElement("button");
+        dd.className = "li-tpl-btn del"; dd.textContent = "\u2715";
+        dd.title = "Zmazať šablónu";
+        dd.addEventListener("click", function(){
+          if(confirm("Zmazať šablónu \"" + tpl.nazov + "\"?")){
+            cat.sablony.splice(ti,1); uloz(); kresli();
+          }
+        });
+        top.appendChild(dd);
+        t.appendChild(top);
+
+        var tx = document.createElement("div");
+        tx.className = "li-tpl-txt";
+        tx.contentEditable = "true";
+        tx.spellcheck = false;
+        tx.textContent = tpl.text;
+        tx.addEventListener("blur", function(){
+          tpl.text = tx.textContent;
+          uloz();
+          var mt = t.querySelector(".li-tpl-meta");
+          if(mt) mt.textContent = tpl.text.length + " znakov";
+        });
+        t.appendChild(tx);
+
+        var meta = document.createElement("div");
+        meta.className = "li-tpl-meta";
+        meta.textContent = tpl.text.length + " znakov";
+        t.appendChild(meta);
+
+        box.appendChild(t);
+      });
+
+      var addw = document.createElement("div");
+      addw.className = "li-addtpl";
+      var ab = document.createElement("button");
+      ab.textContent = "+ Pridať šablónu do \"" + cat.nazov + "\"";
+      ab.addEventListener("click", function(){
+        var n = prompt("Názov šablóny:", "Nová šablóna");
+        if(n === null) return;
+        cat.sablony.push({ id:nid(), nazov:(n.trim() || "Nová šablóna"), text:"" });
+        uloz(); kresli();
+      });
+      addw.appendChild(ab);
+      box.appendChild(addw);
+
+      elCats.appendChild(box);
+    });
+  }
+
+  function kresli(){ kresliTabs(); kresliKategorie(); }
+
+  document.getElementById("liCatAdd").addEventListener("click", function(){
+    var i = document.getElementById("liCatInput");
+    var v = (i.value || "").trim();
+    if(!v) return;
+    data.ucty[data.aktivny].kategorie.push({ id:nid(), nazov:v, sablony:[] });
+    i.value = ""; uloz(); kresli();
+  });
+  document.getElementById("liCatInput").addEventListener("keydown", function(e){
+    if(e.key === "Enter") document.getElementById("liCatAdd").click();
+  });
+
+  document.getElementById("liZaloha").addEventListener("click", function(){
+    var d = new Date();
+    var meno = "linkedin-sablony-" + d.getFullYear() + "-" +
+               String(d.getMonth()+1).padStart(2,"0") + "-" +
+               String(d.getDate()).padStart(2,"0") + ".json";
+    var blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = meno; a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  document.getElementById("liObnovit").addEventListener("click", function(){
+    document.getElementById("liFile").click();
+  });
+  document.getElementById("liFile").addEventListener("change", function(e){
+    var f = e.target.files[0]; if(!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try {
+        var d = JSON.parse(r.result);
+        if(!d || !d.ucty) throw new Error("zly format");
+        data = d;
+        if(typeof data.aktivny !== "number") data.aktivny = 0;
+        uloz(); kresli();
+        alert("Šablóny obnovené.");
+      } catch(err){ alert("Súbor sa nepodarilo načítať."); }
+      e.target.value = "";
+    };
+    r.readAsText(f);
+  });
+
+  kresli();
 })();
 </script>
 
