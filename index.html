@@ -75,42 +75,18 @@
   .pcard p { font-size: 14px; color: var(--text); line-height: 1.6; }
   .pcard .who { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 14px; display: block; }
 
-  .calls-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px; margin-top: 44px; }
-  .call { background: #fff; border: 3px solid var(--border); box-shadow: var(--shadow); position: relative; display: flex; flex-direction: column; }
-  .call::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px; }
-  .call.st-save::before { background: var(--red); }
   .call.st-close::before { background: var(--green); }
-  .call.st-discovery::before { background: var(--accent); }
   .call.st-qualify::before { background: var(--amber); }
-  .call.st-recovery::before { background: var(--amber); }
-  .call-head { padding: 26px 28px 20px; border-bottom: 3px solid var(--border); }
-  .call-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
-  .call-time { font-family: var(--mono); font-size: 12px; font-weight: 900; color: var(--ink); letter-spacing: 0.04em; }
-  .stage { font-family: var(--mono); font-size: 10px; font-weight: 900; padding: 5px 10px; border: 2px solid var(--border); text-transform: uppercase; letter-spacing: 0.1em; }
   .stage.save { background: var(--red-pale); color: #7f1d1d; }
-  .stage.close { background: var(--green-pale); color: #14532d; }
   .stage.discovery { background: var(--accent-pale); color: #1e3a8a; }
-  .stage.qualify { background: var(--amber-pale); color: #7c4a03; }
   .stage.recovery { background: var(--amber-pale); color: #7c4a03; }
-  .call-head h3 { font-size: 23px; font-weight: 900; letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 6px; }
-  .call-co { font-size: 14px; color: var(--text-light); font-weight: 500; }
-  .call-meta { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.03em; margin-top: 8px; }
-  .call-body { padding: 22px 28px 26px; display: flex; flex-direction: column; gap: 18px; flex: 1; }
-  .flag { background: var(--red-pale); border: 2px solid #991b1b; padding: 12px 14px; font-size: 13px; color: #7f1d1d; line-height: 1.5; }
   .flag.amber { background: var(--amber-pale); border-color: #b45309; color: #7c4a03; }
-  .flag.green { background: var(--green-pale); border-color: #15803d; color: #14532d; }
   .flag b { font-weight: 900; }
-  .cblock h5 { font-family: var(--mono); font-size: 10px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px; }
   .cblock p { font-size: 14px; color: var(--text); line-height: 1.6; }
-  .cblock ul { list-style: none; }
   .cblock li { font-size: 13.5px; color: var(--text); line-height: 1.5; padding: 7px 0 7px 22px; border-bottom: 2px solid var(--border-light); position: relative; }
-  .cblock li:last-child { border-bottom: none; }
   .cblock.q li::before { content: "?"; position: absolute; left: 0; color: var(--accent); font-weight: 900; font-family: var(--mono); }
-  .cblock.co .co-name { font-size: 15px; font-weight: 900; letter-spacing: -0.01em; color: var(--ink); display:block; margin-bottom: 4px; }
   .cblock.co .co-meta { font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; display:block; margin-bottom: 8px; }
-  .cblock.obj li { padding-left: 0; }
   .cblock.obj li b { display: block; color: var(--ink); font-weight: 900; font-size: 13px; margin-bottom: 2px; }
-  .cblock.obj li span { color: var(--text-light); }
 
   .site-footer { background: var(--bg-alt); padding: 40px 0; border-top: 3px solid var(--border); }
   .footer-inner { max-width: 1180px; margin: 0 auto; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
@@ -128,7 +104,6 @@
     .hero-stat:nth-child(1), .hero-stat:nth-child(2) { border-bottom: 3px solid var(--border); }
     .hero-stat:nth-child(2), .hero-stat:nth-child(4) { border-right: none; }
     .priorities { grid-template-columns: 1fr; }
-    .calls-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 720px) {
     .site-header { padding: 0 16px; height: 60px; }
@@ -270,46 +245,6 @@
 </style>
 
 <style>
-  /* ===== LINKEDIN ŠABLÓNY ===== */
-  .li-tabs { display:flex; gap:0; margin-top:38px; border-bottom:3px solid var(--border); flex-wrap:wrap; }
-  .li-tab { font-family:var(--mono); font-size:11px; font-weight:900; padding:14px 22px; border:3px solid var(--border); border-bottom:none; background:var(--bg-alt); cursor:pointer; text-transform:uppercase; letter-spacing:0.07em; margin-right:-3px; position:relative; color:var(--text-light); }
-  .li-tab.on { background:var(--ink); color:#fffef8; z-index:2; }
-  .li-tab .cnt { font-size:9px; opacity:0.6; margin-left:6px; }
-  .li-rename { font-family:var(--mono); font-size:10px; font-weight:900; padding:14px 14px; border:3px solid var(--border); border-bottom:none; background:#fff; cursor:pointer; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-muted); }
-  .li-rename:hover { background:var(--amber-pale); color:var(--ink); }
-
-  .li-body { border:3px solid var(--border); border-top:none; box-shadow:var(--shadow); background:#fff; padding:28px; }
-  .li-addcat { display:flex; gap:10px; margin-bottom:26px; flex-wrap:wrap; }
-  .li-addcat input { flex:1; min-width:220px; font-family:var(--font); font-size:14px; padding:12px 14px; border:3px solid var(--border); background:#fff; }
-  .li-addcat input:focus { outline:none; box-shadow:var(--shadow-xs); }
-  .li-addcat button { font-family:var(--mono); font-size:11px; font-weight:900; padding:12px 20px; border:3px solid var(--border); background:var(--ink); color:#fffef8; cursor:pointer; text-transform:uppercase; letter-spacing:0.08em; }
-  .li-addcat button:hover { background:var(--accent); }
-
-  .li-cat { margin-bottom:30px; border:3px solid var(--border); }
-  .li-cat-head { display:flex; align-items:center; gap:12px; padding:14px 18px; background:var(--bg-alt); border-bottom:3px solid var(--border); }
-  .li-cat-head h4 { font-size:15px; font-weight:900; letter-spacing:-0.01em; flex:1; }
-  .li-cat-head .catbtn { font-family:var(--mono); font-size:10px; font-weight:900; padding:6px 11px; border:2px solid var(--border); background:#fff; cursor:pointer; text-transform:uppercase; letter-spacing:0.07em; }
-  .li-cat-head .catbtn:hover { background:var(--accent-pale); }
-  .li-cat-head .catbtn.del:hover { background:var(--red-pale); border-color:var(--red); color:var(--red); }
-
-  .li-tpl { padding:18px; border-bottom:2px solid var(--border-light); }
-  .li-tpl:last-child { border-bottom:none; }
-  .li-tpl-top { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
-  .li-tpl-name { font-family:var(--mono); font-size:11px; font-weight:900; color:var(--ink); flex:1; text-transform:uppercase; letter-spacing:0.06em; }
-  .li-tpl-btn { font-family:var(--mono); font-size:10px; font-weight:900; padding:5px 10px; border:2px solid var(--border); background:#fff; cursor:pointer; text-transform:uppercase; letter-spacing:0.06em; }
-  .li-tpl-btn:hover { background:var(--green-pale); }
-  .li-tpl-btn.del:hover { background:var(--red-pale); border-color:var(--red); color:var(--red); }
-  .li-tpl-txt { font-size:14px; line-height:1.65; color:var(--text); white-space:pre-wrap; word-wrap:break-word; background:var(--bg); border:2px solid var(--border-light); padding:14px; cursor:text; }
-  .li-tpl-txt:focus { outline:none; border-color:var(--accent); background:#fff; }
-  .li-tpl-txt:empty::before { content:"Klikni a napíš šablónu..."; color:var(--text-muted); }
-  .li-tpl-meta { font-family:var(--mono); font-size:9px; color:var(--text-muted); margin-top:7px; text-transform:uppercase; letter-spacing:0.06em; }
-
-  .li-addtpl { padding:14px 18px; background:var(--bg-alt); }
-  .li-addtpl button { font-family:var(--mono); font-size:10px; font-weight:900; padding:9px 16px; border:2px dashed var(--border); background:transparent; cursor:pointer; text-transform:uppercase; letter-spacing:0.07em; width:100%; }
-  .li-addtpl button:hover { background:#fff; border-style:solid; }
-  .li-empty { padding:36px 18px; text-align:center; color:var(--text-muted); font-size:14px; }
-  .li-tools { margin-top:20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-  @media (max-width:720px){ .li-tab { padding:12px 14px; font-size:10px; } .li-body { padding:18px; } }
 </style>
 </head>
 <body>
