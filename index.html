@@ -43,7 +43,7 @@
   .demo-note { margin-top: 28px; background: var(--yellow-pale); border: 3px solid var(--border); box-shadow: var(--shadow-sm); padding: 18px 22px; font-size: 14px; color: var(--text); max-width: 780px; }
   .demo-note b { font-weight: 900; }
 
-  .hero-stats { margin-top: 40px; border: 3px solid var(--border); box-shadow: var(--shadow); background: #fff; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .hero-stats { margin-top: 14px; border: 3px solid var(--border); box-shadow: var(--shadow); background: #fff; display: grid; grid-template-columns: repeat(3, 1fr); }
   .hero-stat { padding: 28px 24px; border-right: 3px solid var(--border); }
   .hero-stat:last-child { border-right: none; }
   .hero-stat .num { font-family: var(--mono); font-size: 42px; font-weight: 900; letter-spacing: -0.04em; color: var(--ink); line-height: 1; display: block; margin-bottom: 10px; }
@@ -51,6 +51,9 @@
   .hero-stat .num.green { color: var(--green); }
   .hero-stat .num.amber { color: var(--amber); }
   .hero-stat .num.red { color: var(--red); }
+  .hero-goals-label { margin-top: 44px; display: inline-block; background: var(--amber-pale); color: var(--ink); font-size: 10px; font-weight: 900; padding: 6px 12px; border: 2px solid var(--border); box-shadow: var(--shadow-xs); text-transform: uppercase; letter-spacing: 0.12em; font-family: var(--mono); }
+  .hero-goals-note { margin-top: 16px; font-size: 13px; color: var(--text-light); font-family: var(--mono); letter-spacing: 0.02em; }
+  .hero-stats + .hero-goals-note { margin-top: 16px; }
   .hero-stat .label { font-size: 11px; color: var(--text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
 
   .section { padding: 64px 40px; border-bottom: 3px solid var(--border); }
@@ -100,9 +103,9 @@
     .cover h1 { font-size: 46px; }
     .section { padding: 48px 24px; }
     .section h2 { font-size: 32px; }
-    .hero-stats { grid-template-columns: 1fr 1fr; }
-    .hero-stat:nth-child(1), .hero-stat:nth-child(2) { border-bottom: 3px solid var(--border); }
-    .hero-stat:nth-child(2), .hero-stat:nth-child(4) { border-right: none; }
+    .hero-stats { grid-template-columns: 1fr; }
+    .hero-stat { border-right: none; border-bottom: 3px solid var(--border); }
+    .hero-stat:last-child { border-bottom: none; }
     .priorities { grid-template-columns: 1fr; }
   }
   @media (max-width: 720px) {
@@ -270,12 +273,13 @@
   <div class="cover-inner">
     <h1>Command<br><span class="champion-mark">Center</span></h1>
     <p class="cover-subtitle">Prehľad výkonu reklám na účte Boosterberg Main a osobný zoznam úloh. Dáta z Meta Ads za posledných 30 dní.</p>
+    <div class="hero-goals-label">October goals</div>
     <div class="hero-stats">
-      <div class="hero-stat"><span class="num amber" id="statTasks">0</span><div class="label">Otvorené úlohy</div></div>
-      <div class="hero-stat"><span class="num green">7</span><div class="label">Aktívne kampane</div></div>
-      <div class="hero-stat"><span class="num">€429</span><div class="label">Útrata 30 dní</div></div>
-      <div class="hero-stat"><span class="num good">2,47 %</span><div class="label">CTR účtu</div></div>
+      <div class="hero-stat"><span class="num">6</span><div class="label">Demo calls booked</div></div>
+      <div class="hero-stat"><span class="num accent">2 500</span><div class="label">Messages sent</div></div>
+      <div class="hero-stat"><span class="num green">1</span><div class="label">Partnership signed</div></div>
     </div>
+    <p class="hero-goals-note">Partnership target: Shoptet, an affiliate agency, or another distribution partner.</p>
   </div>
 </section>
 
