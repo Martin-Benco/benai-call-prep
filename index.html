@@ -303,6 +303,30 @@
     .tr-st { border-bottom:3px solid var(--border); }
   }
 </style>
+
+<style>
+  .sec-toggle { display:flex; align-items:center; gap:14px; cursor:pointer; margin-top:10px; user-select:none; }
+  .sec-toggle .chev { font-family:var(--mono); font-size:17px; font-weight:900; width:34px; height:34px; border:3px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-xs); transition:transform 0.2s ease; flex:0 0 34px; }
+  .sec-toggle:hover .chev { background:var(--amber-pale); }
+  .sec-toggle.open .chev { transform:rotate(90deg); }
+  .sec-toggle .tinfo { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.07em; }
+  .sec-panel { display:none; }
+  .sec-panel.open { display:block; }
+  .tr-more { border:3px solid var(--border); border-top:none; box-shadow:var(--shadow); background:var(--bg-alt); }
+  .tr-more button { width:100%; font-family:var(--mono); font-size:11px; font-weight:900; padding:15px; border:none; background:transparent; cursor:pointer; text-transform:uppercase; letter-spacing:0.09em; color:var(--ink); }
+  .tr-more button:hover { background:#fff; }
+  .cs-row .tr-head, .cs-row .tr-main { grid-template-columns:1fr 110px 150px; }
+  .sb-suhlasili    { background:var(--yellow-pale); color:#713f12; border-color:#a16207; }
+  .sb-rozpracovane { background:var(--amber-pale); color:#7c4a03; border-color:#b45309; }
+  .sb-hotove       { background:var(--green-pale); color:#14532d; border-color:#15803d; }
+  .sb-odmietli     { background:var(--red-pale); color:#7f1d1d; border-color:#991b1b; }
+  .tr-row.st-suhlasili    { background:var(--yellow-pale); }
+  .tr-row.st-rozpracovane { background:#fff8ed; }
+  .tr-row.st-hotove       { background:var(--green-pale); }
+  .tr-row.st-odmietli     { background:var(--bg-alt); opacity:0.6; }
+  #csList .tr-head, #csList .tr-main { grid-template-columns:1fr 110px 150px; }
+  @media (max-width:980px){ #csList .tr-main { grid-template-columns:1fr 1fr; } }
+</style>
 </head>
 <body>
 
@@ -389,27 +413,63 @@
   <div class="section-inner">
     <div class="s-label amber">Reaktivácia</div>
     <h2>Staré trialy</h2>
-    <p class="section-lead">67 firiem, ktoré Boosterberg niekedy používali. Klikni na status pre zmenu, e-mail skopíruješ kliknutím, poznámky sa ukladajú automaticky.</p>
-
-    <div class="tr-bar">
-      <input type="text" id="trHladat" placeholder="Hľadaj firmu alebo e-mail..." autocomplete="off">
-      <select id="trKrajina"><option value="">Všetky krajiny</option></select>
-      <select id="trKat"><option value="">Všetky kategórie</option></select>
-      <select id="trRadit">
-        <option value="boost">Zoradiť: Boosted</option>
-        <option value="nazov">Zoradiť: Názov</option>
-        <option value="datum">Zoradiť: Dátum</option>
-      </select>
+    <p class="section-lead">67 firiem, ktoré Boosterberg niekedy používali.</p>
+    <div class="sec-toggle" id="trToggle">
+      <div class="chev">&rsaquo;</div>
+      <span class="tinfo" id="trToggleInfo">Rozbaliť &middot; 67 firiem</span>
     </div>
+    <div class="sec-panel" id="trPanel">
+      <div class="tr-bar">
+        <input type="text" id="trHladat" placeholder="Hľadaj firmu alebo e-mail..." autocomplete="off">
+        <select id="trKrajina"><option value="">Všetky krajiny</option></select>
+        <select id="trKat"><option value="">Všetky kategórie</option></select>
+        <select id="trRadit">
+          <option value="boost">Zoradiť: Boosted</option>
+          <option value="nazov">Zoradiť: Názov</option>
+          <option value="datum">Zoradiť: Dátum</option>
+        </select>
+      </div>
+      <div class="tr-stats" id="trStats"></div>
+      <div class="tr-list" id="trList"></div>
+      <div class="tr-more" id="trMore" style="display:none"><button></button></div>
+      <div class="tr-tools">
+        <button class="export-btn" id="trZaloha">Uložiť zálohu</button>
+        <button class="export-btn" id="trObnovit">Obnoviť zo zálohy</button>
+        <input type="file" id="trFile" accept=".json" style="display:none">
+        <span class="export-hint" id="trStav">Ukladá sa automaticky</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div class="tr-stats" id="trStats"></div>
-    <div class="tr-list" id="trList"></div>
-
-    <div class="tr-tools">
-      <button class="export-btn" id="trZaloha">Uložiť zálohu</button>
-      <button class="export-btn" id="trObnovit">Obnoviť zo zálohy</button>
-      <input type="file" id="trFile" accept=".json" style="display:none">
-      <span class="export-hint" id="trStav">Ukladá sa automaticky</span>
+<!-- ===== CASE STUDIES ===== -->
+<section class="section" id="cases">
+  <div class="section-inner">
+    <div class="s-label green">Case studies</div>
+    <h2>Klienti na case study</h2>
+    <p class="section-lead">35 klientov, od ktorých chceš prípadovú štúdiu.</p>
+    <div class="sec-toggle" id="csToggle">
+      <div class="chev">&rsaquo;</div>
+      <span class="tinfo" id="csToggleInfo">Rozbaliť &middot; 35 klientov</span>
+    </div>
+    <div class="sec-panel" id="csPanel">
+      <div class="tr-bar">
+        <input type="text" id="csHladat" placeholder="Hľadaj klienta..." autocomplete="off">
+        <select id="csRadit">
+          <option value="datum">Zoradiť: Najnovší</option>
+          <option value="datum_asc">Zoradiť: Najstarší</option>
+          <option value="nazov">Zoradiť: Názov</option>
+        </select>
+      </div>
+      <div class="tr-stats" id="csStats"></div>
+      <div class="tr-list" id="csList"></div>
+      <div class="tr-more" id="csMore" style="display:none"><button></button></div>
+      <div class="tr-tools">
+        <button class="export-btn" id="csZaloha">Uložiť zálohu</button>
+        <button class="export-btn" id="csObnovit">Obnoviť zo zálohy</button>
+        <input type="file" id="csFile" accept=".json" style="display:none">
+        <span class="export-hint" id="csStav">Ukladá sa automaticky</span>
+      </div>
     </div>
   </div>
 </section>
@@ -919,227 +979,295 @@
 
 
 
+
+
+
 <script>
 (function(){
   "use strict";
-  var KEY = "martinsales_trialy_v1";
+
+  function pd(d){
+    if(!d) return 0;
+    var q = String(d).split(".");
+    return q.length !== 3 ? 0 : new Date(+q[2], +q[1]-1, +q[0]).getTime();
+  }
+
+  function kopiruj(text, el){
+    var ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch(e){}
+    document.body.removeChild(ta);
+    var pov = el.textContent;
+    el.textContent = "Skopirovane \u2713";
+    setTimeout(function(){ el.textContent = pov; }, 1100);
+  }
+
+  function zoznam(cfg){
+    var ulozene = {};
+    try { ulozene = JSON.parse(localStorage.getItem(cfg.key)) || {}; } catch(e){ ulozene = {}; }
+
+    var elList  = document.getElementById(cfg.list);
+    var elStats = document.getElementById(cfg.stats);
+    var elMore  = document.getElementById(cfg.more);
+    if(!elList) return;
+
+    var fHladat = "", fStav = "", radit = cfg.raditDefault, vsetko = false;
+    var LIMIT = 10;
+
+    function kluc(i){ return "f" + i; }
+    function stavOf(i){
+      var u = ulozene[kluc(i)];
+      if(u && u.stav) return u.stav;
+      if(cfg.vychoziStav){ var v = cfg.vychoziStav(cfg.data[i]); if(v) return v; }
+      return cfg.stavy[0];
+    }
+    function notaOf(i){ var u = ulozene[kluc(i)]; return (u && u.nota) || ""; }
+
+    function uloz(){
+      try { localStorage.setItem(cfg.key, JSON.stringify(ulozene)); } catch(e){}
+      var st = document.getElementById(cfg.stav);
+      if(st){
+        st.textContent = "Ulozene \u2713"; st.style.color = "var(--green)";
+        clearTimeout(st.__t);
+        st.__t = setTimeout(function(){ st.textContent = "Uklada sa automaticky"; st.style.color = ""; }, 1500);
+      }
+    }
+
+    function filtrovane(){
+      var out = [];
+      cfg.data.forEach(function(f, i){
+        var h = fHladat.toLowerCase();
+        if(h && cfg.hladatText(f).toLowerCase().indexOf(h) === -1) return;
+        if(cfg.filtre){
+          for(var k = 0; k < cfg.filtre.length; k++){
+            var fl = cfg.filtre[k];
+            if(fl.hodnota && f[fl.stlpec] !== fl.hodnota) return;
+          }
+        }
+        if(fStav && stavOf(i) !== fStav) return;
+        out.push(i);
+      });
+      cfg.zorad(out, radit, cfg.data);
+      return out;
+    }
+
+    function kresliStats(){
+      var poc = {};
+      cfg.stavy.forEach(function(x){ poc[x] = 0; });
+      cfg.data.forEach(function(f, i){ var st = stavOf(i); poc[st] = (poc[st] || 0) + 1; });
+      elStats.innerHTML = "";
+      elStats.style.gridTemplateColumns = "repeat(" + cfg.stavy.length + ",1fr)";
+      cfg.stavy.forEach(function(st){
+        var d = document.createElement("div");
+        d.className = "tr-st" + (fStav === st ? " on" : "");
+        var n = document.createElement("span"); n.className = "n"; n.textContent = poc[st] || 0;
+        var l = document.createElement("span"); l.className = "l"; l.textContent = cfg.nazvy[st];
+        d.appendChild(n); d.appendChild(l);
+        d.addEventListener("click", function(){
+          fStav = (fStav === st) ? "" : st; vsetko = false; kresli();
+        });
+        elStats.appendChild(d);
+      });
+    }
+
+    function kresliList(){
+      var idx = filtrovane();
+      elList.innerHTML = "";
+
+      var head = document.createElement("div");
+      head.className = "tr-head";
+      cfg.hlavicka.forEach(function(t){
+        var sp = document.createElement("span"); sp.textContent = t; head.appendChild(sp);
+      });
+      elList.appendChild(head);
+
+      if(!idx.length){
+        var e = document.createElement("div");
+        e.className = "tr-empty"; e.textContent = "Nic nevyhovuje filtru.";
+        elList.appendChild(e);
+        elMore.style.display = "none";
+        return;
+      }
+
+      var zobraz = vsetko ? idx : idx.slice(0, LIMIT);
+
+      zobraz.forEach(function(i){
+        var f = cfg.data[i], st = stavOf(i);
+        var row = document.createElement("div");
+        row.className = "tr-row st-" + st;
+
+        var main = document.createElement("div");
+        main.className = "tr-main";
+        cfg.bunky(f, main, kopiruj);
+
+        var btn = document.createElement("div");
+        btn.className = "tr-stbtn sb-" + st;
+        btn.textContent = cfg.nazvy[st];
+        btn.title = "Klikni pre dalsi status";
+        btn.addEventListener("click", function(){
+          var pI = cfg.stavy.indexOf(stavOf(i));
+          var novy = cfg.stavy[(pI + 1) % cfg.stavy.length];
+          if(!ulozene[kluc(i)]) ulozene[kluc(i)] = {};
+          ulozene[kluc(i)].stav = novy;
+          uloz(); kresli();
+        });
+        main.appendChild(btn);
+        row.appendChild(main);
+
+        var nl = document.createElement("div");
+        nl.className = "tr-noteline";
+        var ta = document.createElement("textarea");
+        ta.className = "tr-note"; ta.rows = 1;
+        ta.placeholder = "Poznamka k " + f[0] + "...";
+        ta.value = notaOf(i);
+        ta.addEventListener("input", function(){
+          ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 2) + "px";
+        });
+        ta.addEventListener("blur", function(){
+          if(!ulozene[kluc(i)]) ulozene[kluc(i)] = {};
+          ulozene[kluc(i)].nota = ta.value;
+          uloz();
+        });
+        nl.appendChild(ta);
+        row.appendChild(nl);
+        elList.appendChild(row);
+        if(ta.value){ ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 2) + "px"; }
+      });
+
+      if(idx.length > LIMIT){
+        elMore.style.display = "block";
+        var b = elMore.querySelector("button");
+        b.textContent = vsetko
+          ? ("Zbalit \u00b7 zobrazit len " + LIMIT)
+          : ("Zobrazit vsetkych " + idx.length + " \u00b7 zvysnych " + (idx.length - LIMIT));
+        b.onclick = function(){ vsetko = !vsetko; kresliList(); };
+      } else {
+        elMore.style.display = "none";
+      }
+    }
+
+    function kresli(){ kresliStats(); kresliList(); }
+
+    var hl = document.getElementById(cfg.hladat);
+    if(hl) hl.addEventListener("input", function(e){ fHladat = e.target.value; vsetko = false; kresliList(); });
+    var rd = document.getElementById(cfg.radit);
+    if(rd) rd.addEventListener("change", function(e){ radit = e.target.value; kresliList(); });
+
+    if(cfg.filtre){
+      cfg.filtre.forEach(function(fl){
+        var el = document.getElementById(fl.id);
+        if(!el) return;
+        var hod = {};
+        cfg.data.forEach(function(f){ if(f[fl.stlpec]) hod[f[fl.stlpec]] = 1; });
+        Object.keys(hod).sort().forEach(function(k){
+          var o = document.createElement("option"); o.value = k; o.textContent = k; el.appendChild(o);
+        });
+        el.addEventListener("change", function(e){ fl.hodnota = e.target.value; vsetko = false; kresliList(); });
+      });
+    }
+
+    var zb = document.getElementById(cfg.zaloha);
+    if(zb) zb.addEventListener("click", function(){
+      var d = new Date();
+      var meno = cfg.subor + "-" + d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0") + ".json";
+      var blob = new Blob([JSON.stringify(ulozene,null,2)], {type:"application/json"});
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = meno; a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    var ob = document.getElementById(cfg.obnovit);
+    var fi = document.getElementById(cfg.file);
+    if(ob && fi){
+      ob.addEventListener("click", function(){ fi.click(); });
+      fi.addEventListener("change", function(e){
+        var f = e.target.files[0]; if(!f) return;
+        var r = new FileReader();
+        r.onload = function(){
+          try {
+            var d = JSON.parse(r.result);
+            if(typeof d !== "object" || d === null) throw new Error("zly format");
+            ulozene = d; uloz(); kresli();
+            alert("Obnovene.");
+          } catch(err){ alert("Subor sa nepodarilo nacitat."); }
+          e.target.value = "";
+        };
+        r.readAsText(f);
+      });
+    }
+
+    var tg = document.getElementById(cfg.toggle);
+    var pn = document.getElementById(cfg.panel);
+    var ti = document.getElementById(cfg.toggleInfo);
+    if(tg && pn && ti){
+      tg.addEventListener("click", function(){
+        var otv = pn.classList.toggle("open");
+        tg.classList.toggle("open", otv);
+        ti.textContent = (otv ? "Zbalit" : "Rozbalit") + " \u00b7 " + cfg.data.length + " " + cfg.slovo;
+        if(otv) kresli();
+      });
+    }
+
+    kresli();
+  }
 
   var FIRMY = [["100X Social", "bill.hillestad@gmail.com", "US", "Digital Agency", 5244, "19.04.2017"], ["Wax Interactive 2", "lissa@wax.be", "BE", "Digital Agency", 193, "16.10.2019"], ["Virtual Identity GmbH", "rechnungen.vie@virtual-identity.com", "AT", "Digital Agency", 119, "08.08.2018"], ["lindmarkpartner", "info@lindmarkpartner.se", "SE", "Digital Agency", 95, "29.06.2017"], ["Bonami", "blanka.kudrnova@bonami.cz", "CZ", "Brand", 87, "04.03.2019"], ["Česká produkční Social Media", "michal@ceskaprodukcni.cz", "CZ", "Digital Agency", 86, "12.10.2018"], ["wmcgrey", "jan.rysanek@wmcgrey.cz", "CZ", "Digital Agency", 80, "02.01.2017"], ["webprofits", "alex.c@webprofits.com.au", "AU", "Digital Agency", 55, "12.03.2017"], ["BoligPortal", "simon@rohl.dk", "DK", "Brand", 45, "20.02.2017"], ["NORD E-COM", "nordfa@protonmail.com", "CZ", "Brand", 41, "12.11.2020"], ["24Sverige", "sofia.hult@24sverige.se", "SE", "", 38, "08.08.2018"], ["TME Austria", "TME-AUT-PaidSocial-DL@house-of-communication.com", "DE", "", 30, "11.11.2022"], ["In creative", "ales@increative.cz", "CZ", "Digital Agency", 29, "01.08.2017"], ["ON/OFF Marketing", "kopecky@onoff-marketing.cz", "CZ", "Digital Agency", 29, "12.02.2019"], ["HelloFreshDACH", "anna.seidenfuss@hellofresh.de", "DE", "Brand", 29, "02.11.2020"], ["Evis solutions", "martin.kristof@evis.sk", "SK", "", 24, "06.06.2025"], ["FPD media, a.s.", "katarina.halinkovicova@novycas.sk", "SK", "Media Publisher", 22, "14.12.2018"], ["iZlato s.r.o.", "partner@izlato.sk", "SK", "Brand", 21, "25.08.2021"], ["Marketup s.r.o.", "google@marketup.cz", "SK", "", 21, "21.01.2026"], ["Lapcom", "lindusbindus2@gmail.com", "HU", "", 20, "21.11.2018"], ["meleven", "meleven@meleven.sk", "SK", "Media Publisher", 20, "03.08.2019"], ["Curaprox", "sumska@curaprox.sk", "SK", "Brand", 18, "23.01.2017"], ["Empower", "daniel@empower.social", "CA", "Digital Agency", 18, "08.06.2020"], ["ATENA – SERVICES s.r.o.", "marketing@atena.org", "SK", "Brand", 17, "16.06.2021"], ["POHODA FESTIVAL, s. r. o.", "jana@pohodafestival.sk", "SK", "", 17, "11.02.2025"], ["DOUBLE RED", "vo@doublered.eu", "SK", "Brand", 16, "09.05.2019"], ["MARWEA Agency s.r.o.", "invoice@marwea.com", "CZ", "Freelancer", 16, "16.03.2021"], ["Space Ads", "rafal.chojnacki@spaceads.digital", "PL", "Digital Agency", 16, "07.07.2021"], ["Basta digital", "gibasova@bastadigital.com", "SK", "Digital Agency", 15, "25.05.2020"], ["Dobré médiá, s.r.o.", "info@dobremedia.sk", "SK", "Media Publisher", 15, "29.10.2021"], ["Powerlogy", "natalia.rudnanska@performics.com", "CZ", "Digital Agency", 13, "05.03.2020"], ["Eurospin New Business", "nicola.donati@eurospin.it", "IT", "Brand", 13, "24.02.2021"], ["LEXXUS", "katarina.pekarikova@lexxus.sk", "SK", "Brand", 12, "31.07.2018"], ["Glett, s.r.o", "acc2.glett@gmail.com", "SK", "Brand", 12, "30.04.2019"], ["Perex", "rsedaj@perex.sk", "SK", "", 11, "30.05.2017"], ["Kreativ Gang", "mariamatuskova@kreativgang.sk", "SK", "Digital Agency", 11, "06.02.2019"], ["Kreation AB", "attila.kiss@kreation.se", "SE", "Digital Agency", 11, "14.05.2020"], ["MAFRA, a. s.", "Robert.otec@idnes.cz", "CZ", "", 10, "30.07.2018"], ["VLTAVA LABE MEDIA a.s.", "petra.machanova@vlmedia.cz", "CZ", "", 9, "31.10.2017"], ["Fitnessmagnet GmbH Boosterberg", "dev@fitnessmagnet.com", "CH", "Brand", 8, "28.10.2020"], ["BILD", "anne-kathrin.liebknecht@bild.de", "DE", "", 7, "26.06.2018"], ["internet.sk, a.s.", "martinkaroly@gmail.com", "SK", "Media Publisher", 7, "06.07.2018"], ["Coolshop s.r.o.", "info@textil-servis.cz", "CZ", "", 7, "02.10.2018"], ["noizz.de", "caterina.schwaier.extern@bild.de", "DE", "Media Publisher", 7, "09.01.2019"], ["BPN Lietuva", "tools@bpnlt.com", "LT", "", 7, "14.02.2019"], ["Union Poistovna", "jakub.gabris@union.sk", "SK", "Brand", 7, "12.08.2020"], ["refurbed", "sascha.knorr@refurbed.com", "AT", "Brand", 7, "21.12.2021"], ["KLENOTA", "m.neprasova@gmail.com", "CZ", "Freelancer", 7, "22.04.2022"], ["Ecomm Trade s.r.o.", "contact@ecommtrade.eu", "SK", "Brand", 7, "27.04.2022"], ["TV JOJ", "webmaster@joj.sk", "SK", "", 5, "17.08.2016"], ["Radio Services - Europa 2", "peter.kemp@radioservices.sk", "CZ", "Media Publisher", 5, "28.05.2018"], ["Forbes Slovensko", "brona.molnarova@forbes.sk", "SK", "Media Publisher", 5, "25.04.2019"], ["Unikum Solutions s.r.o.", "mcc@unikum.cz", "CZ", "Digital Agency", 5, "08.03.2021"], ["Meliora.digital", "mednansky.marketing@gmail.com", "SK", "", 5, "02.03.2026"], ["dedoles", "martin@dedoles.sk", "SK", "", 4, "06.12.2016"], ["10x Travel", "admin@10x.travel", "GB", "Brand", 4, "28.03.2017"], ["Telemach", "account@p-m.si", "SI", "Digital Agency", 4, "15.06.2018"], ["STYLEBOOK.de", "tanja.hellmig@bild.de", "DE", "", 4, "22.02.2019"], ["DELFI", "kornelija.jasiunaite@delfi.com", "LT", "", 4, "04.03.2019"], ["SCR interactive", "miriam.hola@scr.sk", "SK", "Digital Agency", 4, "21.09.2020"], ["Crisp Video Group", "paige.favor@crispvideo.com", "US", "Digital Agency", 4, "19.05.2021"], ["ON/OFF Marketing s.r.o.", "info@onoff-marketing.cz", "CZ", "Digital Agency", 4, "30.06.2021"], ["Delta", "zaboer@delta.app", "BE", "Brand", 4, "26.11.2021"], ["Zlavomat", "marketing@zlavomat.sk", "SK", "", 4, "16.02.2023"], ["SITA", "meri@sita.sk", "SK", "", 4, "05.07.2023"], ["Deník N", "jan.simkanic@denikn.cz", "CZ", "", 3, "07.11.2018"], ["GALTON Brands s. r. o.", "konarek@galton.sk", "", "", 0, ""]];
-
-  var STAVY = ["nove","oslovene","odpovedali","schodzka","nezaujem"];
-  var NAZVY = { nove:"Neoslovené", oslovene:"Oslovené", odpovedali:"Odpovedali", schodzka:"Schôdzka", nezaujem:"Nezáujem" };
-
-  var ulozene = {};
-  try { ulozene = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ ulozene = {}; }
-
-  var elList = document.getElementById("trList");
-  var elStats = document.getElementById("trStats");
-  if(!elList) return;
-
-  var fHladat = "", fKrajina = "", fKat = "", fStav = "", radit = "boost";
-
-  function kluc(i){ return "f" + i; }
-  function stavOf(i){ var u = ulozene[kluc(i)]; return (u && u.stav) || "nove"; }
-  function notaOf(i){ var u = ulozene[kluc(i)]; return (u && u.nota) || ""; }
-
-  function uloz(){
-    try { localStorage.setItem(KEY, JSON.stringify(ulozene)); } catch(e){}
-    var st = document.getElementById("trStav");
-    if(st){
-      st.textContent = "Uložené \u2713"; st.style.color = "var(--green)";
-      clearTimeout(window.__trT);
-      window.__trT = setTimeout(function(){ st.textContent = "Ukladá sa automaticky"; st.style.color = ""; }, 1500);
-    }
-  }
-
-  // naplnenie filtrov
-  (function(){
-    var kr = {}, ka = {};
-    FIRMY.forEach(function(f){ if(f[2]) kr[f[2]] = 1; if(f[3]) ka[f[3]] = 1; });
-    var sk = document.getElementById("trKrajina"), sa = document.getElementById("trKat");
-    Object.keys(kr).sort().forEach(function(k){
-      var o = document.createElement("option"); o.value = k; o.textContent = k; sk.appendChild(o);
-    });
-    Object.keys(ka).sort().forEach(function(k){
-      var o = document.createElement("option"); o.value = k; o.textContent = k; sa.appendChild(o);
-    });
-  })();
-
-  function parseDat(d){
-    if(!d) return 0;
-    var p = d.split(".");
-    if(p.length !== 3) return 0;
-    return new Date(+p[2], +p[1]-1, +p[0]).getTime();
-  }
-
-  function filtrovane(){
-    var out = [];
-    FIRMY.forEach(function(f, i){
-      var h = fHladat.toLowerCase();
-      if(h && (f[0]+" "+f[1]).toLowerCase().indexOf(h) === -1) return;
-      if(fKrajina && f[2] !== fKrajina) return;
-      if(fKat && f[3] !== fKat) return;
-      if(fStav && stavOf(i) !== fStav) return;
-      out.push(i);
-    });
-    if(radit === "nazov") out.sort(function(a,b){ return FIRMY[a][0].localeCompare(FIRMY[b][0], "sk"); });
-    else if(radit === "datum") out.sort(function(a,b){ return parseDat(FIRMY[b][5]) - parseDat(FIRMY[a][5]); });
-    else out.sort(function(a,b){ return FIRMY[b][4] - FIRMY[a][4]; });
-    return out;
-  }
-
-  function kresliStats(){
-    var poc = { nove:0, oslovene:0, odpovedali:0, schodzka:0, nezaujem:0 };
-    FIRMY.forEach(function(f, i){ poc[stavOf(i)]++; });
-    elStats.innerHTML = "";
-    STAVY.forEach(function(st){
-      var d = document.createElement("div");
-      d.className = "tr-st" + (fStav === st ? " on" : "");
-      d.innerHTML = '<span class="n">' + poc[st] + '</span><span class="l">' + NAZVY[st] + '</span>';
-      d.addEventListener("click", function(){
-        fStav = (fStav === st) ? "" : st;
-        kresli();
-      });
-      elStats.appendChild(d);
-    });
-  }
-
-  function kresliList(){
-    var idx = filtrovane();
-    elList.innerHTML = "";
-
-    var head = document.createElement("div");
-    head.className = "tr-head";
-    ["Firma","E-mail","Kr.","Dátum","Boosted","Status"].forEach(function(t){
-      var sp = document.createElement("span"); sp.textContent = t; head.appendChild(sp);
-    });
-    elList.appendChild(head);
-
-    if(!idx.length){
-      var e = document.createElement("div");
-      e.className = "tr-empty";
-      e.textContent = "Nič nevyhovuje filtru.";
-      elList.appendChild(e);
-      return;
-    }
-
-    idx.forEach(function(i){
-      var f = FIRMY[i], st = stavOf(i);
-      var row = document.createElement("div");
-      row.className = "tr-row st-" + st;
-
-      var main = document.createElement("div");
-      main.className = "tr-main";
-
+  zoznam({
+    key:"martinsales_trialy_v1", data:FIRMY,
+    list:"trList", stats:"trStats", more:"trMore", hladat:"trHladat", radit:"trRadit",
+    zaloha:"trZaloha", obnovit:"trObnovit", file:"trFile", stav:"trStav",
+    toggle:"trToggle", panel:"trPanel", toggleInfo:"trToggleInfo",
+    subor:"trialy", slovo:"firiem", raditDefault:"boost",
+    stavy:["nove","oslovene","odpovedali","schodzka","nezaujem"],
+    nazvy:{ nove:"Neoslovene", oslovene:"Oslovene", odpovedali:"Odpovedali", schodzka:"Schodzka", nezaujem:"Nezaujem" },
+    hlavicka:["Firma","E-mail","Kr.","Datum","Boosted","Status"],
+    hladatText:function(f){ return f[0] + " " + f[1]; },
+    filtre:[ {id:"trKrajina", stlpec:2, hodnota:""}, {id:"trKat", stlpec:3, hodnota:""} ],
+    zorad:function(out, r, D){
+      if(r === "nazov") out.sort(function(a,b){ return D[a][0].localeCompare(D[b][0],"sk"); });
+      else if(r === "datum") out.sort(function(a,b){ return pd(D[b][5]) - pd(D[a][5]); });
+      else out.sort(function(a,b){ return D[b][4] - D[a][4]; });
+    },
+    bunky:function(f, main, kop){
       var co = document.createElement("div");
-      var nm = document.createElement("div");
-      nm.className = "tr-co"; nm.textContent = f[0];
+      var nm = document.createElement("div"); nm.className = "tr-co"; nm.textContent = f[0];
       co.appendChild(nm);
-      if(f[3]){
-        var ct = document.createElement("span");
-        ct.className = "tr-cat"; ct.textContent = f[3];
-        co.appendChild(ct);
-      }
+      if(f[3]){ var ct = document.createElement("span"); ct.className = "tr-cat"; ct.textContent = f[3]; co.appendChild(ct); }
       main.appendChild(co);
-
-      var em = document.createElement("div");
-      em.className = "tr-mail";
-      em.textContent = f[1];
-      em.title = "Klikni pre skopírovanie";
-      em.addEventListener("click", function(){
-        var ta = document.createElement("textarea");
-        ta.value = f[1]; document.body.appendChild(ta); ta.select();
-        try { document.execCommand("copy"); } catch(err){}
-        document.body.removeChild(ta);
-        var pov = em.textContent;
-        em.textContent = "Skopírované \u2713";
-        setTimeout(function(){ em.textContent = pov; }, 1100);
-      });
+      var em = document.createElement("div"); em.className = "tr-mail"; em.textContent = f[1];
+      em.title = "Klikni pre skopirovanie";
+      em.addEventListener("click", function(){ kop(f[1], em); });
       main.appendChild(em);
-
-      var kr = document.createElement("div");
-      kr.className = "tr-ctry"; kr.textContent = f[2] || "\u2014";
-      main.appendChild(kr);
-
-      var dt = document.createElement("div");
-      dt.className = "tr-date"; dt.textContent = f[5] || "\u2014";
-      main.appendChild(dt);
-
-      var bo = document.createElement("div");
-      bo.className = "tr-boost"; bo.textContent = f[4] ? f[4] : "\u2014";
-      main.appendChild(bo);
-
-      var btn = document.createElement("div");
-      btn.className = "tr-stbtn sb-" + st;
-      btn.textContent = NAZVY[st];
-      btn.title = "Klikni pre ďalší status";
-      btn.addEventListener("click", function(){
-        var p = STAVY.indexOf(stavOf(i));
-        var novy = STAVY[(p + 1) % STAVY.length];
-        if(!ulozene[kluc(i)]) ulozene[kluc(i)] = {};
-        ulozene[kluc(i)].stav = novy;
-        uloz(); kresli();
-      });
-      main.appendChild(btn);
-
-      row.appendChild(main);
-
-      var nl = document.createElement("div");
-      nl.className = "tr-noteline";
-      var ta = document.createElement("textarea");
-      ta.className = "tr-note";
-      ta.rows = 1;
-      ta.placeholder = "Poznámka k " + f[0] + "...";
-      ta.value = notaOf(i);
-      ta.addEventListener("input", function(){
-        ta.style.height = "auto";
-        ta.style.height = (ta.scrollHeight + 2) + "px";
-      });
-      ta.addEventListener("blur", function(){
-        if(!ulozene[kluc(i)]) ulozene[kluc(i)] = {};
-        ulozene[kluc(i)].nota = ta.value;
-        uloz();
-      });
-      nl.appendChild(ta);
-      row.appendChild(nl);
-
-      elList.appendChild(row);
-      if(ta.value){ ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 2) + "px"; }
-    });
-  }
-
-  function kresli(){ kresliStats(); kresliList(); }
-
-  document.getElementById("trHladat").addEventListener("input", function(e){ fHladat = e.target.value; kresliList(); });
-  document.getElementById("trKrajina").addEventListener("change", function(e){ fKrajina = e.target.value; kresliList(); });
-  document.getElementById("trKat").addEventListener("change", function(e){ fKat = e.target.value; kresliList(); });
-  document.getElementById("trRadit").addEventListener("change", function(e){ radit = e.target.value; kresliList(); });
-
-  document.getElementById("trZaloha").addEventListener("click", function(){
-    var d = new Date();
-    var meno = "trialy-" + d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0") + ".json";
-    var blob = new Blob([JSON.stringify(ulozene,null,2)], {type:"application/json"});
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob); a.download = meno; a.click();
-    URL.revokeObjectURL(a.href);
-  });
-  document.getElementById("trObnovit").addEventListener("click", function(){ document.getElementById("trFile").click(); });
-  document.getElementById("trFile").addEventListener("change", function(e){
-    var f = e.target.files[0]; if(!f) return;
-    var r = new FileReader();
-    r.onload = function(){
-      try {
-        var d = JSON.parse(r.result);
-        if(typeof d !== "object") throw new Error("zly format");
-        ulozene = d; uloz(); kresli();
-        alert("Obnovené.");
-      } catch(err){ alert("Súbor sa nepodarilo načítať."); }
-      e.target.value = "";
-    };
-    r.readAsText(f);
+      var kr = document.createElement("div"); kr.className = "tr-ctry"; kr.textContent = f[2] || "\u2014"; main.appendChild(kr);
+      var dt = document.createElement("div"); dt.className = "tr-date"; dt.textContent = f[5] || "\u2014"; main.appendChild(dt);
+      var bo = document.createElement("div"); bo.className = "tr-boost"; bo.textContent = f[4] ? f[4] : "\u2014"; main.appendChild(bo);
+    }
   });
 
-  kresli();
+  var CASES = [["FILIPES MEDIA s.r.o.", "25.10.2021", ""], ["ringier", "01.03.2022", ""], ["Moshtix", "14.10.2023", ""], ["Bonami New Countries", "05.01.2024", ""], ["United Classifieds s.r.o.", "31.10.2025", ""], ["GymBeam s.r.o.", "01.12.2025", ""], ["TV Nova", "18.01.2026", ""], ["GymBeam", "18.01.2026", ""], ["MARKÍZA - SLOVAKIA, spol. s r.o.", "19.01.2026", ""], ["BAUER MEDIA Slovakia", "25.02.2026", ""], ["Suprcon GmbH / HOWI", "06.08.2026", "rozpracovane"], ["Mia Dresses, s. r. o.", "15.08.2026", ""], ["PEDRO TRADE, s. r. o.", "17.08.2026", ""], ["eyerim s.r.o", "18.08.2026", ""], ["Chase Creative BV", "19.08.2026", "rozpracovane"], ["Screenroom", "22.08.2026", ""], ["SCR design s.r.o.", "23.08.2026", ""], ["EMI EU Slovakia", "23.08.2026", ""], ["MAFRA Slovakia", "23.08.2026", ""], ["RV 3, s.r.o.", "24.08.2026", ""], ["DR studio CZ", "25.08.2026", ""], ["Clear Water Press, Inc.", "25.08.2026", ""], ["PS:Digital - Facebook", "28.08.2026", ""], ["SHAPEN s.r.o.", "29.08.2026", ""], ["Sportega s.r.o.", "30.08.2026", ""], ["Journio s.r.o.", "02.09.2026", ""], ["PS:Digital - Instagram", "02.09.2026", ""], ["JH Media and Consulting", "04.09.2026", ""], ["HIGH5 Studio", "06.09.2026", ""], ["Effectix CZ", "09.09.2026", ""], ["Private Media", "10.09.2026", ""], ["La Piete Bilingual High School", "10.09.2026", ""], ["Effectix SK", "11.09.2026", ""], ["60seconds technologies", "12.09.2026", ""], ["kralovstvi-tiande", "12.09.2026", ""]];
+  zoznam({
+    key:"martinsales_cases_v1", data:CASES,
+    list:"csList", stats:"csStats", more:"csMore", hladat:"csHladat", radit:"csRadit",
+    zaloha:"csZaloha", obnovit:"csObnovit", file:"csFile", stav:"csStav",
+    toggle:"csToggle", panel:"csPanel", toggleInfo:"csToggleInfo",
+    subor:"case-studies", slovo:"klientov", raditDefault:"datum",
+    stavy:["nove","oslovene","suhlasili","rozpracovane","hotove","odmietli"],
+    nazvy:{ nove:"Neoslovene", oslovene:"Oslovene", suhlasili:"Suhlasili", rozpracovane:"Rozpracovane", hotove:"Hotove", odmietli:"Odmietli" },
+    hlavicka:["Klient","Datum","Status"],
+    hladatText:function(f){ return f[0]; },
+    vychoziStav:function(f){ return f[2]; },
+    zorad:function(out, r, D){
+      if(r === "nazov") out.sort(function(a,b){ return D[a][0].localeCompare(D[b][0],"sk"); });
+      else if(r === "datum_asc") out.sort(function(a,b){ return pd(D[a][1]) - pd(D[b][1]); });
+      else out.sort(function(a,b){ return pd(D[b][1]) - pd(D[a][1]); });
+    },
+    bunky:function(f, main, kop){
+      var co = document.createElement("div");
+      var nm = document.createElement("div"); nm.className = "tr-co"; nm.textContent = f[0];
+      co.appendChild(nm); main.appendChild(co);
+      var dt = document.createElement("div"); dt.className = "tr-date"; dt.textContent = f[1] || "\u2014"; main.appendChild(dt);
+    }
+  });
 })();
 </script>
 
