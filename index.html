@@ -336,7 +336,9 @@
   .hr-of { font-family:var(--mono); font-size:19px; font-weight:900; color:var(--text-muted); }
   .hr-goalin { font-family:var(--mono); font-size:19px; font-weight:900; width:64px; border:none; border-bottom:3px solid var(--border); background:transparent; color:var(--text-muted); text-align:center; padding:0 2px 2px; }
   .hr-goalin:focus { outline:none; color:var(--ink); border-color:var(--accent); }
-  .hr-pct { margin-left:auto; font-family:var(--mono); font-size:30px; font-weight:900; color:var(--green); letter-spacing:-0.03em; }
+  .hr-eur { margin-left:auto; font-family:var(--mono); font-size:30px; font-weight:900; color:var(--ink); letter-spacing:-0.03em; }
+  .hr-eur .sm { font-size:15px; color:var(--text-muted); margin-left:3px; }
+  .hr-pct { margin-left:18px; font-family:var(--mono); font-size:30px; font-weight:900; color:var(--green); letter-spacing:-0.03em; }
 
   .hr-track { height:34px; border:3px solid var(--border); background:var(--bg-alt); position:relative; overflow:hidden; }
   .hr-done { position:absolute; left:0; top:0; bottom:0; background:var(--green); transition:width 0.5s cubic-bezier(0.22,0.61,0.36,1); }
@@ -464,6 +466,7 @@
         <span class="hr-of">/</span>
         <input type="number" class="hr-goalin" id="hrGoal" value="100" min="1" max="999">
         <span class="hr-of">:00 h</span>
+        <span class="hr-eur" id="hrEur">€0</span>
         <span class="hr-pct" id="hrPct">0 %</span>
       </div>
       <div class="hr-track">
@@ -1425,6 +1428,7 @@
 (function(){
   "use strict";
   var KEY = "martinsales_hodiny_v1";
+  var SADZBA = 12;
   var MES = ["január","február","marec","apríl","máj","jún","júl","august","september","október","november","december"];
 
   var dnes = new Date();
@@ -1491,6 +1495,8 @@
 
     $("hrDone").textContent = fmt(c.hot);
     $("hrPct").textContent = Math.round((c.hot / ciel) * 100) + " %";
+    var eur = c.hot * SADZBA;
+    $("hrEur").innerHTML = "\u20ac" + (Math.round(eur * 100) / 100).toLocaleString("sk-SK", {minimumFractionDigits:0, maximumFractionDigits:2}) + '<span class="sm">zarobené</span>';
     $("hrBarDone").style.width = pct + "%";
     $("hrBarPlan").style.left = pct + "%";
     $("hrBarPlan").style.width = pctPlan + "%";
@@ -1511,14 +1517,14 @@
     var m = $("hrMotiv");
     if(c.hot >= ciel){
       m.className = "hr-motiv ok";
-      m.innerHTML = "<b>Cieľ splnený.</b> " + fmt(c.hot) + " h z " + ciel + ":00. Zvyšok mesiaca je bonus.";
+      m.innerHTML = "<b>Cieľ splnený.</b> " + fmt(c.hot) + " h z " + ciel + ":00, čo je €" + Math.round(c.hot * SADZBA) + ". Zvyšok mesiaca je bonus.";
     } else if(c.hot + c.plan >= ciel){
       m.className = "hr-motiv ok";
-      m.innerHTML = "<b>Si na dobrej ceste.</b> Odpracované " + fmt(c.hot) + " h, naplánované ďalších " + fmt(c.plan) + " h. Dokopy " + fmt(c.hot + c.plan) + " h, čo cieľ " + ciel + ":00 pokrýva. Stačí to odrobiť.";
+      m.innerHTML = "<b>Si na dobrej ceste.</b> Odpracované " + fmt(c.hot) + " h (€" + Math.round(c.hot * SADZBA) + "), naplánované ďalších " + fmt(c.plan) + " h (€" + Math.round(c.plan * SADZBA) + "). Dokopy " + fmt(c.hot + c.plan) + " h, čo cieľ " + ciel + ":00 pokrýva. Po odrobení máš €" + Math.round((c.hot + c.plan) * SADZBA) + ".";
     } else {
       var chyba = ciel - c.hot - c.plan;
       m.className = "hr-motiv warn";
-      m.innerHTML = "<b>Chýba ti " + fmt(chyba) + " h v pláne.</b> Máš odpracované " + fmt(c.hot) + " h a naplánované " + fmt(c.plan) + " h. Do cieľa treba naplánovať ešte " + fmt(chyba) + " h, zostáva " + zostava + " dní, čiže " + fmt(tempo) + " h denne.";
+      m.innerHTML = "<b>Chýba ti " + fmt(chyba) + " h v pláne.</b> Odpracované " + fmt(c.hot) + " h (€" + Math.round(c.hot * SADZBA) + ") a naplánované " + fmt(c.plan) + " h. Do cieľa treba naplánovať ešte " + fmt(chyba) + " h, zostáva " + zostava + " dní, čiže " + fmt(tempo) + " h denne. Pri splnení cieľa to je €" + (ciel * SADZBA) + ".";
     }
   }
 
