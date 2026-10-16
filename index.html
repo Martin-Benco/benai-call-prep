@@ -327,6 +327,95 @@
   #csList .tr-head, #csList .tr-main { grid-template-columns:1fr 110px 150px; }
   @media (max-width:980px){ #csList .tr-main { grid-template-columns:1fr 1fr; } }
 </style>
+
+<style>
+  /* ===== HODINY A KALENDÁR ===== */
+  .hr-top { margin-top:38px; border:3px solid var(--border); box-shadow:var(--shadow); background:#fff; padding:28px 30px; }
+  .hr-goalline { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:18px; }
+  .hr-big { font-family:var(--mono); font-size:52px; font-weight:900; letter-spacing:-0.045em; line-height:1; color:var(--ink); }
+  .hr-of { font-family:var(--mono); font-size:19px; font-weight:900; color:var(--text-muted); }
+  .hr-goalin { font-family:var(--mono); font-size:19px; font-weight:900; width:64px; border:none; border-bottom:3px solid var(--border); background:transparent; color:var(--text-muted); text-align:center; padding:0 2px 2px; }
+  .hr-goalin:focus { outline:none; color:var(--ink); border-color:var(--accent); }
+  .hr-pct { margin-left:auto; font-family:var(--mono); font-size:30px; font-weight:900; color:var(--green); letter-spacing:-0.03em; }
+
+  .hr-track { height:34px; border:3px solid var(--border); background:var(--bg-alt); position:relative; overflow:hidden; }
+  .hr-done { position:absolute; left:0; top:0; bottom:0; background:var(--green); transition:width 0.5s cubic-bezier(0.22,0.61,0.36,1); }
+  .hr-plan { position:absolute; top:0; bottom:0; background:repeating-linear-gradient(45deg, var(--amber-pale), var(--amber-pale) 7px, #fff 7px, #fff 14px); border-right:2px solid var(--amber); transition:left 0.5s ease, width 0.5s ease; }
+  .hr-legend { display:flex; gap:20px; margin-top:12px; flex-wrap:wrap; }
+  .hr-lg { display:flex; align-items:center; gap:7px; font-family:var(--mono); font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.06em; }
+  .hr-sw { width:13px; height:13px; border:2px solid var(--border); flex:0 0 13px; }
+  .hr-sw.done { background:var(--green); }
+  .hr-sw.plan { background:repeating-linear-gradient(45deg, var(--amber-pale), var(--amber-pale) 4px, #fff 4px, #fff 8px); }
+
+  .hr-kpis { display:grid; grid-template-columns:repeat(4,1fr); border:3px solid var(--border); border-top:none; background:#fff; }
+  .hr-kpi { padding:16px 18px; border-right:3px solid var(--border); }
+  .hr-kpi:last-child { border-right:none; }
+  .hr-kpi .n { font-family:var(--mono); font-size:24px; font-weight:900; display:block; line-height:1; margin-bottom:5px; letter-spacing:-0.03em; }
+  .hr-kpi .l { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-light); }
+  .hr-kpi .n.green { color:var(--green); } .hr-kpi .n.amber { color:var(--amber); } .hr-kpi .n.red { color:var(--red); }
+
+  .hr-grid { display:grid; grid-template-columns:1fr 1fr; gap:26px; margin-top:26px; }
+  .hr-cal { border:3px solid var(--border); box-shadow:var(--shadow); background:#fff; }
+  .hr-calhead { padding:16px 20px; border-bottom:3px solid var(--border); background:var(--bg-alt); display:flex; align-items:center; justify-content:space-between; }
+  .hr-month { font-size:17px; font-weight:900; letter-spacing:-0.02em; text-transform:capitalize; }
+  .hr-today { font-family:var(--mono); font-size:10px; font-weight:900; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.07em; }
+  .hr-dow { display:grid; grid-template-columns:repeat(7,1fr); border-bottom:2px solid var(--border-light); }
+  .hr-dow span { padding:9px 0; text-align:center; font-family:var(--mono); font-size:9px; font-weight:900; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; }
+  .hr-days { display:grid; grid-template-columns:repeat(7,1fr); }
+  .hr-day { aspect-ratio:1; border-right:2px solid var(--border-light); border-bottom:2px solid var(--border-light); padding:7px 8px; cursor:pointer; position:relative; display:flex; flex-direction:column; transition:background 0.12s; }
+  .hr-day:nth-child(7n) { border-right:none; }
+  .hr-day.empty { background:var(--bg-alt); cursor:default; opacity:0.45; }
+  .hr-day:not(.empty):hover { background:var(--accent-pale); }
+  .hr-day.sel { background:var(--ink); }
+  .hr-day.sel .dn { color:#fffef8; }
+  .hr-day.today .dn { background:var(--accent); color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .hr-day .dn { font-family:var(--mono); font-size:12px; font-weight:900; color:var(--ink); line-height:1; }
+  .hr-day.wknd .dn { color:var(--text-muted); }
+  .hr-dots { display:flex; gap:3px; margin-top:auto; flex-wrap:wrap; }
+  .hr-dot { width:7px; height:7px; border:1.5px solid var(--border); }
+  .hr-dot.done { background:var(--green); }
+  .hr-dot.plan { background:var(--amber-pale); }
+  .hr-dayh { position:absolute; top:6px; right:7px; font-family:var(--mono); font-size:9px; font-weight:900; color:var(--green); }
+  .hr-day.sel .hr-dayh { color:#9ae6b4; }
+
+  .hr-side { border:3px solid var(--border); box-shadow:var(--shadow); background:#fff; display:flex; flex-direction:column; }
+  .hr-sidehead { padding:16px 20px; border-bottom:3px solid var(--border); background:var(--bg-alt); }
+  .hr-sidehead h4 { font-size:15px; font-weight:900; letter-spacing:-0.015em; }
+  .hr-sidehead .sub { font-family:var(--mono); font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:3px; display:block; }
+  .hr-add { padding:16px 20px; border-bottom:3px solid var(--border); display:grid; grid-template-columns:1fr 72px; gap:9px; }
+  .hr-add input, .hr-add select { font-family:var(--font); font-size:13px; padding:10px 11px; border:2px solid var(--border); background:#fff; }
+  .hr-add input:focus, .hr-add select:focus { outline:none; border-color:var(--accent); }
+  .hr-add .wide { grid-column:1 / -1; }
+  .hr-add button { grid-column:1 / -1; font-family:var(--mono); font-size:11px; font-weight:900; padding:11px; border:3px solid var(--border); background:var(--ink); color:#fffef8; cursor:pointer; text-transform:uppercase; letter-spacing:0.08em; }
+  .hr-add button:hover { background:var(--accent); }
+  .hr-ses { flex:1; max-height:420px; overflow-y:auto; }
+  .hr-s { display:flex; gap:11px; padding:13px 20px; border-bottom:2px solid var(--border-light); align-items:flex-start; }
+  .hr-s:last-child { border-bottom:none; }
+  .hr-s.done { background:var(--green-pale); }
+  .hr-s.past { background:#fff5f5; }
+  .hr-cb { width:21px; height:21px; flex:0 0 21px; border:3px solid var(--border); background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; margin-top:1px; }
+  .hr-s.done .hr-cb { background:var(--green); color:#fff; }
+  .hr-sm { flex:1; min-width:0; }
+  .hr-sd { font-family:var(--mono); font-size:10px; font-weight:900; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px; }
+  .hr-s.past .hr-sd { color:var(--red); }
+  .hr-sp { font-size:13.5px; color:var(--ink); line-height:1.4; word-wrap:break-word; }
+  .hr-s.done .hr-sp { text-decoration:line-through; color:var(--text-light); }
+  .hr-sh { font-family:var(--mono); font-size:15px; font-weight:900; color:var(--ink); flex:0 0 auto; }
+  .hr-sx { font-family:var(--mono); font-size:11px; font-weight:900; color:var(--text-muted); background:none; border:2px solid transparent; cursor:pointer; padding:3px 6px; flex:0 0 auto; }
+  .hr-sx:hover { color:var(--red); border-color:var(--red); }
+  .hr-empty { padding:40px 20px; text-align:center; color:var(--text-muted); font-size:13px; line-height:1.6; }
+  .hr-motiv { margin-top:24px; border:3px solid var(--border); box-shadow:var(--shadow-sm); padding:18px 22px; font-size:14px; line-height:1.6; background:var(--yellow-pale); }
+  .hr-motiv b { font-weight:900; }
+  .hr-motiv.ok { background:var(--green-pale); }
+  .hr-motiv.warn { background:var(--amber-pale); }
+  @media (max-width:980px){
+    .hr-grid { grid-template-columns:1fr; }
+    .hr-kpis { grid-template-columns:1fr 1fr; }
+    .hr-kpi:nth-child(1), .hr-kpi:nth-child(2) { border-bottom:3px solid var(--border); }
+    .hr-kpi:nth-child(2), .hr-kpi:nth-child(4) { border-right:none; }
+    .hr-big { font-size:40px; }
+  }
+</style>
 </head>
 <body>
 
@@ -359,6 +448,66 @@
       <div class="hero-stat"><span class="num amber">100</span><div class="label">Hours worked</div></div>
     </div>
     <p class="hero-goals-note">Partnership target: Shoptet, an affiliate agency, or another distribution partner.</p>
+  </div>
+</section>
+
+<!-- ===== HODINY A KALENDÁR ===== -->
+<section class="section" id="hodiny">
+  <div class="section-inner">
+    <div class="s-label green">Tento mesiac</div>
+    <h2>Hodiny a work sessions</h2>
+    <p class="section-lead">Naplánuj si prácu dopredu, odškrtni hotové. Kalendár ukazuje, kedy pracuješ, progress bar koľko ti zostáva do cieľa.</p>
+
+    <div class="hr-top">
+      <div class="hr-goalline">
+        <span class="hr-big" id="hrDone">0</span>
+        <span class="hr-of">/</span>
+        <input type="number" class="hr-goalin" id="hrGoal" value="100" min="1" max="999">
+        <span class="hr-of">h</span>
+        <span class="hr-pct" id="hrPct">0 %</span>
+      </div>
+      <div class="hr-track">
+        <div class="hr-done" id="hrBarDone" style="width:0%"></div>
+        <div class="hr-plan" id="hrBarPlan" style="left:0%;width:0%"></div>
+      </div>
+      <div class="hr-legend">
+        <span class="hr-lg"><span class="hr-sw done"></span>Odpracované</span>
+        <span class="hr-lg"><span class="hr-sw plan"></span>Naplánované</span>
+      </div>
+    </div>
+    <div class="hr-kpis">
+      <div class="hr-kpi"><span class="n green" id="kDone">0 h</span><span class="l">Odpracované</span></div>
+      <div class="hr-kpi"><span class="n amber" id="kPlan">0 h</span><span class="l">Naplánované</span></div>
+      <div class="hr-kpi"><span class="n" id="kLeft">100 h</span><span class="l">Zostáva do cieľa</span></div>
+      <div class="hr-kpi"><span class="n" id="kPace">0 h</span><span class="l">Denné tempo</span></div>
+    </div>
+
+    <div class="hr-grid">
+      <div class="hr-cal">
+        <div class="hr-calhead">
+          <span class="hr-month" id="hrMonth">—</span>
+          <span class="hr-today" id="hrDaysLeft">—</span>
+        </div>
+        <div class="hr-dow"><span>Po</span><span>Ut</span><span>St</span><span>Št</span><span>Pi</span><span>So</span><span>Ne</span></div>
+        <div class="hr-days" id="hrDays"></div>
+      </div>
+
+      <div class="hr-side">
+        <div class="hr-sidehead">
+          <h4 id="hrSideTitle">Work sessions</h4>
+          <span class="sub" id="hrSideSub">Celý mesiac</span>
+        </div>
+        <div class="hr-add">
+          <input type="date" id="hrDate">
+          <input type="number" id="hrHours" placeholder="h" step="0.5" min="0.5" value="2">
+          <input type="text" class="wide" id="hrDesc" placeholder="Na čom budeš robiť?" autocomplete="off">
+          <button id="hrAdd">Pridať session</button>
+        </div>
+        <div class="hr-ses" id="hrSes"></div>
+      </div>
+    </div>
+
+    <div class="hr-motiv" id="hrMotiv"></div>
   </div>
 </section>
 
@@ -1268,6 +1417,251 @@
       var dt = document.createElement("div"); dt.className = "tr-date"; dt.textContent = f[1] || "\u2014"; main.appendChild(dt);
     }
   });
+})();
+</script>
+
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "martinsales_hodiny_v1";
+  var MES = ["január","február","marec","apríl","máj","jún","júl","august","september","október","november","december"];
+
+  var dnes = new Date();
+  var ROK = dnes.getFullYear(), MESIAC = dnes.getMonth();
+
+  var data = { ciel:100, sessions:[] };
+  try {
+    var r = JSON.parse(localStorage.getItem(KEY));
+    if(r && typeof r === "object"){
+      data.ciel = typeof r.ciel === "number" ? r.ciel : 100;
+      data.sessions = Array.isArray(r.sessions) ? r.sessions : [];
+    }
+  } catch(e){}
+
+  var vybrany = null;
+
+  var $ = function(id){ return document.getElementById(id); };
+  if(!$("hrDays")) return;
+
+  function iso(y,m,d){
+    return y + "-" + String(m+1).padStart(2,"0") + "-" + String(d).padStart(2,"0");
+  }
+  function dnesIso(){ return iso(dnes.getFullYear(), dnes.getMonth(), dnes.getDate()); }
+  function vMesiaci(s){ return s.datum.indexOf(ROK + "-" + String(MESIAC+1).padStart(2,"0")) === 0; }
+
+  function uloz(){
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e){}
+  }
+
+  function sucty(){
+    var hot = 0, plan = 0;
+    data.sessions.filter(vMesiaci).forEach(function(s){
+      var h = parseFloat(s.hodiny) || 0;
+      if(s.hotovo) hot += h; else plan += h;
+    });
+    return { hot:hot, plan:plan };
+  }
+
+  function fmt(n){
+    return (Math.round(n * 10) / 10).toString().replace(".", ",");
+  }
+
+  function kresliTop(){
+    var c = sucty(), ciel = data.ciel || 100;
+    var pct = Math.min(100, (c.hot / ciel) * 100);
+    var pctPlan = Math.min(100 - pct, (c.plan / ciel) * 100);
+
+    $("hrDone").textContent = fmt(c.hot);
+    $("hrPct").textContent = Math.round((c.hot / ciel) * 100) + " %";
+    $("hrBarDone").style.width = pct + "%";
+    $("hrBarPlan").style.left = pct + "%";
+    $("hrBarPlan").style.width = pctPlan + "%";
+
+    var dniVMesiaci = new Date(ROK, MESIAC+1, 0).getDate();
+    var dnesDen = (dnes.getFullYear() === ROK && dnes.getMonth() === MESIAC) ? dnes.getDate() : dniVMesiaci;
+    var zostava = Math.max(0, dniVMesiaci - dnesDen + 1);
+    var doCiela = Math.max(0, ciel - c.hot);
+    var tempo = zostava > 0 ? doCiela / zostava : doCiela;
+
+    $("kDone").textContent = fmt(c.hot) + " h";
+    $("kPlan").textContent = fmt(c.plan) + " h";
+    $("kLeft").textContent = fmt(doCiela) + " h";
+    $("kPace").textContent = fmt(tempo) + " h";
+    $("kPace").className = "n" + (tempo > 8 ? " red" : tempo > 5 ? " amber" : " green");
+    $("hrDaysLeft").textContent = zostava + " dní do konca";
+
+    var m = $("hrMotiv");
+    if(c.hot >= ciel){
+      m.className = "hr-motiv ok";
+      m.innerHTML = "<b>Cieľ splnený.</b> " + fmt(c.hot) + " hodín z " + ciel + ". Zvyšok mesiaca je bonus.";
+    } else if(c.hot + c.plan >= ciel){
+      m.className = "hr-motiv ok";
+      m.innerHTML = "<b>Si na dobrej ceste.</b> Odpracované " + fmt(c.hot) + " h, naplánované ďalších " + fmt(c.plan) + " h. Dokopy " + fmt(c.hot + c.plan) + " h, čo cieľ " + ciel + " h pokrýva. Stačí to odrobiť.";
+    } else {
+      var chyba = ciel - c.hot - c.plan;
+      m.className = "hr-motiv warn";
+      m.innerHTML = "<b>Chýba ti " + fmt(chyba) + " h v pláne.</b> Máš odpracované " + fmt(c.hot) + " h a naplánované " + fmt(c.plan) + " h. Do cieľa treba naplánovať ešte " + fmt(chyba) + " hodín, zostáva " + zostava + " dní, čiže " + fmt(tempo) + " h denne.";
+    }
+  }
+
+  function kresliKal(){
+    var el = $("hrDays");
+    el.innerHTML = "";
+    $("hrMonth").textContent = MES[MESIAC] + " " + ROK;
+
+    var prvy = new Date(ROK, MESIAC, 1).getDay();
+    prvy = (prvy === 0) ? 6 : prvy - 1;
+    var dni = new Date(ROK, MESIAC+1, 0).getDate();
+    var dIso = dnesIso();
+
+    for(var i = 0; i < prvy; i++){
+      var e = document.createElement("div");
+      e.className = "hr-day empty";
+      el.appendChild(e);
+    }
+
+    for(var d = 1; d <= dni; d++){
+      (function(den){
+        var key = iso(ROK, MESIAC, den);
+        var dow = new Date(ROK, MESIAC, den).getDay();
+        var cell = document.createElement("div");
+        cell.className = "hr-day";
+        if(dow === 0 || dow === 6) cell.className += " wknd";
+        if(key === dIso) cell.className += " today";
+        if(vybrany === key) cell.className += " sel";
+
+        var n = document.createElement("div");
+        n.className = "dn"; n.textContent = den;
+        cell.appendChild(n);
+
+        var ses = data.sessions.filter(function(x){ return x.datum === key; });
+        if(ses.length){
+          var hotH = 0;
+          ses.forEach(function(x){ if(x.hotovo) hotH += parseFloat(x.hodiny) || 0; });
+          if(hotH > 0){
+            var hh = document.createElement("div");
+            hh.className = "hr-dayh"; hh.textContent = fmt(hotH) + "h";
+            cell.appendChild(hh);
+          }
+          var dots = document.createElement("div");
+          dots.className = "hr-dots";
+          ses.slice(0,4).forEach(function(x){
+            var dt = document.createElement("span");
+            dt.className = "hr-dot " + (x.hotovo ? "done" : "plan");
+            dots.appendChild(dt);
+          });
+          cell.appendChild(dots);
+        }
+
+        cell.addEventListener("click", function(){
+          vybrany = (vybrany === key) ? null : key;
+          if(vybrany) $("hrDate").value = vybrany;
+          kresli();
+        });
+        el.appendChild(cell);
+      })(d);
+    }
+  }
+
+  function kresliSes(){
+    var el = $("hrSes");
+    el.innerHTML = "";
+    var zoznam = data.sessions.filter(vMesiaci);
+    if(vybrany) zoznam = zoznam.filter(function(s){ return s.datum === vybrany; });
+    zoznam.sort(function(a,b){ return a.datum.localeCompare(b.datum); });
+
+    if(vybrany){
+      var p = vybrany.split("-");
+      $("hrSideTitle").textContent = p[2] + ". " + MES[+p[1]-1];
+      $("hrSideSub").textContent = "Klikni na deň znova pre celý mesiac";
+    } else {
+      $("hrSideTitle").textContent = "Work sessions";
+      $("hrSideSub").textContent = "Celý mesiac · " + zoznam.length + " sessions";
+    }
+
+    if(!zoznam.length){
+      var e = document.createElement("div");
+      e.className = "hr-empty";
+      e.textContent = vybrany ? "Na tento deň nič naplánované." : "Zatiaľ žiadne sessions. Pridaj prvú vyššie.";
+      el.appendChild(e);
+      return;
+    }
+
+    var dIso = dnesIso();
+    zoznam.forEach(function(s){
+      var row = document.createElement("div");
+      row.className = "hr-s" + (s.hotovo ? " done" : (s.datum < dIso ? " past" : ""));
+
+      var cb = document.createElement("div");
+      cb.className = "hr-cb";
+      cb.textContent = s.hotovo ? "✓" : "";
+      cb.addEventListener("click", function(){
+        s.hotovo = !s.hotovo; uloz(); kresli();
+      });
+      row.appendChild(cb);
+
+      var mid = document.createElement("div");
+      mid.className = "hr-sm";
+      var dd = document.createElement("div");
+      dd.className = "hr-sd";
+      var pp = s.datum.split("-");
+      var lbl = pp[2] + ". " + MES[+pp[1]-1].slice(0,3);
+      if(!s.hotovo && s.datum < dIso) lbl += " · zmeškané";
+      if(s.datum === dIso) lbl += " · dnes";
+      dd.textContent = lbl;
+      var pz = document.createElement("div");
+      pz.className = "hr-sp"; pz.textContent = s.popis || "Work session";
+      mid.appendChild(dd); mid.appendChild(pz);
+      row.appendChild(mid);
+
+      var hh = document.createElement("div");
+      hh.className = "hr-sh"; hh.textContent = fmt(s.hodiny) + "h";
+      row.appendChild(hh);
+
+      var x = document.createElement("button");
+      x.className = "hr-sx"; x.textContent = "✕";
+      var potvrd = false;
+      x.addEventListener("click", function(){
+        if(!potvrd){
+          potvrd = true; x.textContent = "?"; x.style.color = "var(--red)";
+          setTimeout(function(){ potvrd = false; x.textContent = "✕"; x.style.color = ""; }, 2200);
+          return;
+        }
+        data.sessions = data.sessions.filter(function(z){ return z.id !== s.id; });
+        uloz(); kresli();
+      });
+      row.appendChild(x);
+
+      el.appendChild(row);
+    });
+  }
+
+  function kresli(){ kresliTop(); kresliKal(); kresliSes(); }
+
+  $("hrAdd").addEventListener("click", function(){
+    var d = $("hrDate").value;
+    var h = parseFloat($("hrHours").value);
+    var o = $("hrDesc").value.trim();
+    if(!d){ $("hrDate").focus(); return; }
+    if(!h || h <= 0){ $("hrHours").focus(); return; }
+    data.sessions.push({
+      id: "s" + Date.now() + Math.floor(Math.random()*100),
+      datum: d, hodiny: h, popis: o, hotovo: false
+    });
+    $("hrDesc").value = "";
+    uloz(); kresli();
+  });
+  $("hrDesc").addEventListener("keydown", function(e){ if(e.key === "Enter") $("hrAdd").click(); });
+
+  $("hrGoal").addEventListener("input", function(e){
+    var v = parseInt(e.target.value, 10);
+    if(v > 0){ data.ciel = v; uloz(); kresliTop(); }
+  });
+
+  $("hrDate").value = dnesIso();
+  $("hrGoal").value = data.ciel;
+  kresli();
 })();
 </script>
 
