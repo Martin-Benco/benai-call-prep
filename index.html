@@ -463,7 +463,7 @@
         <span class="hr-big" id="hrDone">0</span>
         <span class="hr-of">/</span>
         <input type="number" class="hr-goalin" id="hrGoal" value="100" min="1" max="999">
-        <span class="hr-of">h</span>
+        <span class="hr-of">:00 h</span>
         <span class="hr-pct" id="hrPct">0 %</span>
       </div>
       <div class="hr-track">
@@ -499,7 +499,7 @@
         </div>
         <div class="hr-add">
           <input type="date" id="hrDate">
-          <input type="number" id="hrHours" placeholder="h" step="0.5" min="0.5" value="2">
+          <input type="text" id="hrHours" placeholder="2:30" value="2:00" autocomplete="off">
           <input type="text" class="wide" id="hrDesc" placeholder="Na čom budeš robiť?" autocomplete="off">
           <button id="hrAdd">Pridať session</button>
         </div>
@@ -1464,7 +1464,24 @@
   }
 
   function fmt(n){
-    return (Math.round(n * 10) / 10).toString().replace(".", ",");
+    var min = Math.round((parseFloat(n) || 0) * 60);
+    var h = Math.floor(min / 60);
+    var m = min % 60;
+    return h + ":" + String(m).padStart(2, "0");
+  }
+
+  function parseHod(txt){
+    if(txt === null || txt === undefined) return 0;
+    var t = String(txt).trim().replace(",", ".");
+    if(!t) return 0;
+    if(t.indexOf(":") !== -1){
+      var q = t.split(":");
+      var h = parseInt(q[0], 10) || 0;
+      var m = parseInt(q[1], 10) || 0;
+      return h + m / 60;
+    }
+    if(/m$/i.test(t)) return (parseFloat(t) || 0) / 60;
+    return parseFloat(t) || 0;
   }
 
   function kresliTop(){
@@ -1484,24 +1501,24 @@
     var doCiela = Math.max(0, ciel - c.hot);
     var tempo = zostava > 0 ? doCiela / zostava : doCiela;
 
-    $("kDone").textContent = fmt(c.hot) + " h";
-    $("kPlan").textContent = fmt(c.plan) + " h";
-    $("kLeft").textContent = fmt(doCiela) + " h";
-    $("kPace").textContent = fmt(tempo) + " h";
+    $("kDone").textContent = fmt(c.hot);
+    $("kPlan").textContent = fmt(c.plan);
+    $("kLeft").textContent = fmt(doCiela);
+    $("kPace").textContent = fmt(tempo);
     $("kPace").className = "n" + (tempo > 8 ? " red" : tempo > 5 ? " amber" : " green");
     $("hrDaysLeft").textContent = zostava + " dní do konca";
 
     var m = $("hrMotiv");
     if(c.hot >= ciel){
       m.className = "hr-motiv ok";
-      m.innerHTML = "<b>Cieľ splnený.</b> " + fmt(c.hot) + " hodín z " + ciel + ". Zvyšok mesiaca je bonus.";
+      m.innerHTML = "<b>Cieľ splnený.</b> " + fmt(c.hot) + " h z " + ciel + ":00. Zvyšok mesiaca je bonus.";
     } else if(c.hot + c.plan >= ciel){
       m.className = "hr-motiv ok";
-      m.innerHTML = "<b>Si na dobrej ceste.</b> Odpracované " + fmt(c.hot) + " h, naplánované ďalších " + fmt(c.plan) + " h. Dokopy " + fmt(c.hot + c.plan) + " h, čo cieľ " + ciel + " h pokrýva. Stačí to odrobiť.";
+      m.innerHTML = "<b>Si na dobrej ceste.</b> Odpracované " + fmt(c.hot) + " h, naplánované ďalších " + fmt(c.plan) + " h. Dokopy " + fmt(c.hot + c.plan) + " h, čo cieľ " + ciel + ":00 pokrýva. Stačí to odrobiť.";
     } else {
       var chyba = ciel - c.hot - c.plan;
       m.className = "hr-motiv warn";
-      m.innerHTML = "<b>Chýba ti " + fmt(chyba) + " h v pláne.</b> Máš odpracované " + fmt(c.hot) + " h a naplánované " + fmt(c.plan) + " h. Do cieľa treba naplánovať ešte " + fmt(chyba) + " hodín, zostáva " + zostava + " dní, čiže " + fmt(tempo) + " h denne.";
+      m.innerHTML = "<b>Chýba ti " + fmt(chyba) + " h v pláne.</b> Máš odpracované " + fmt(c.hot) + " h a naplánované " + fmt(c.plan) + " h. Do cieľa treba naplánovať ešte " + fmt(chyba) + " h, zostáva " + zostava + " dní, čiže " + fmt(tempo) + " h denne.";
     }
   }
 
@@ -1541,7 +1558,7 @@
           ses.forEach(function(x){ if(x.hotovo) hotH += parseFloat(x.hodiny) || 0; });
           if(hotH > 0){
             var hh = document.createElement("div");
-            hh.className = "hr-dayh"; hh.textContent = fmt(hotH) + "h";
+            hh.className = "hr-dayh"; hh.textContent = fmt(hotH);
             cell.appendChild(hh);
           }
           var dots = document.createElement("div");
@@ -1616,7 +1633,7 @@
       row.appendChild(mid);
 
       var hh = document.createElement("div");
-      hh.className = "hr-sh"; hh.textContent = fmt(s.hodiny) + "h";
+      hh.className = "hr-sh"; hh.textContent = fmt(s.hodiny);
       row.appendChild(hh);
 
       var x = document.createElement("button");
@@ -1641,7 +1658,7 @@
 
   $("hrAdd").addEventListener("click", function(){
     var d = $("hrDate").value;
-    var h = parseFloat($("hrHours").value);
+    var h = parseHod($("hrHours").value);
     var o = $("hrDesc").value.trim();
     if(!d){ $("hrDate").focus(); return; }
     if(!h || h <= 0){ $("hrHours").focus(); return; }
@@ -1650,9 +1667,15 @@
       datum: d, hodiny: h, popis: o, hotovo: false
     });
     $("hrDesc").value = "";
+    $("hrHours").value = fmt(h);
     uloz(); kresli();
   });
   $("hrDesc").addEventListener("keydown", function(e){ if(e.key === "Enter") $("hrAdd").click(); });
+  $("hrHours").addEventListener("blur", function(){
+    var v = parseHod($("hrHours").value);
+    if(v > 0) $("hrHours").value = fmt(v);
+  });
+  $("hrHours").addEventListener("keydown", function(e){ if(e.key === "Enter") $("hrAdd").click(); });
 
   $("hrGoal").addEventListener("input", function(e){
     var v = parseInt(e.target.value, 10);
